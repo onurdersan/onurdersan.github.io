@@ -3,6 +3,7 @@
 const CONFIG = {
   github: {
     username: 'onurdersan', 
+  },
   scholar: {
     authorId: 'kNMI5kEAAAAJ', //  ID
     limit: 5, // Gösterilecek makale sayısı
