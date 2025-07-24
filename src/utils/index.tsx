@@ -118,6 +118,10 @@ export const getSanitizedConfig = (
         limit: config?.blog?.limit || 5,
         display: !!config?.blog?.username && !!config?.blog?.source,
       },
+      scholar: { // Bu bölümü ekleyin
+        authorId: config?.scholar?.authorId,
+        limit: config?.scholar?.limit || 5,
+      },
       themeConfig: {
         defaultTheme: config?.themeConfig?.defaultTheme || DEFAULT_THEMES[0],
         disableSwitch: config?.themeConfig?.disableSwitch || false,
