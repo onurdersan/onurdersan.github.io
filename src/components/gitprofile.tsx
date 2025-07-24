@@ -1,3 +1,5 @@
+import scholarData from '../data/scholar.json';
+
 import ScholarCard from './scholar-card';
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
@@ -256,10 +258,11 @@ const GitProfile = ({ config }: { config: Config }) => {
                     />
                   )}
                   {sanitizedConfig.scholar?.authorId && (
-                  <ScholarCard
-                
-                  />
-                )}
+                    <ScholarCard
+                      loading={loading}
+                      articles={scholarData.articles}
+                    />
+                  )}
                   {sanitizedConfig.projects.external.projects.length !== 0 && (
                     <ExternalProjectCard
                       loading={loading}
