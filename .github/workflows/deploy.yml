@@ -21,7 +21,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        # ---- YENİ EKLENEN ADIMLAR BAŞLANGIÇ ----
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install scholarly
+          
+      - name: Fetch Google Scholar data
+        run: python scripts/get_scholar_data.py
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
