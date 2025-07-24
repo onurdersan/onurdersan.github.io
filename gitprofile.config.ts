@@ -161,7 +161,7 @@ const CONFIG = {
     },
     {
       institution: 'Dokuz Eylül Üniversitesi Tıp Fakültesi',
-      degree: 'MD',
+      degree: 'Medical Doctor',
       from: '2008',
       to: '2015',
     },
