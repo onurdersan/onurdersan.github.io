@@ -40,7 +40,7 @@ const CONFIG = {
       ],
     },
   },
-  seo: { title: 'Derşan Onur', description: '', imageURL: '' },
+  seo: { title: 'Derşan Onur', description: 'Pediatrician, M.D.', imageURL: '' },
   social: {
     linkedin: 'dersanonur',
     x: 'dersanonur',
