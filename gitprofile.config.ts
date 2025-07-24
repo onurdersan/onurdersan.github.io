@@ -32,14 +32,13 @@ const CONFIG = {
        {
          title: 'Project Name',
          description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut.',
+        //    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut.',
           imageUrl:
             'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg',
           link: 'https://example.com',
        },
       ],
     },
-  },
   seo: { title: 'Derşan Onur', description: 'Pediatrician, M.D.', imageURL: '' },
   social: {
     linkedin: 'dersanonur',
@@ -95,10 +94,61 @@ const CONFIG = {
   ],
   certifications: [
     {
-      name: 'Lorem ipsum',
-      body: 'Lorem ipsum dolor sit amet',
-      year: 'March 2022',
-      link: 'https://example.com',
+      name: 'Good Medical Researcher',
+      body: '',
+      year: '',
+      link: '',
+    },
+    {
+      name: 'ICH Good Clinical Practice',
+      body: '',
+      year: '',
+      link: '',
+    },
+      {
+      name: 'Good Clinical Practice Training for Social and Behavioral Research',
+      body: '',
+      year: '',
+      link: '',
+    },
+        {
+      name: 'Scale Development and Adaptation Training',
+      body: '',
+      year: '',
+      link: '',
+    },
+        {
+      name: 'Medical Research Methods',
+      body: '',
+      year: '',
+      link: '',
+    },
+        {
+      name: 'Research Ethics',
+      body: '',
+      year: '',
+      link: '',
+    },
+        {
+      name: 'Bibliometric Analysis',
+      body: '',
+      year: '',
+      link: '',
+    },
+    {
+    name: 'BTK Akademi',
+    body: 'a. Project Management Fundamentals
+          b. Project and Risk Management
+          c. Algorithm Design
+          d. Entrepreneurship Fundamentals
+          e. Data Science
+          f. Artificial Intelligence
+          g. Information Technology
+          h. Deep Learning
+          i. Natural Language Processing
+          j. Reinforcement Learning',
+    year: '',
+    link: '',
     },
   ],
   educations: [
@@ -138,7 +188,7 @@ const CONFIG = {
   // Display articles from your medium or dev account. (Optional)
   blog: {
     source: 'dev', // medium | dev
-    username: 'arifszn', // to hide blog section, keep it empty
+    username: 'dersanonur', // to hide blog section, keep it empty
     limit: 2, // How many articles to display. Max is 10.
   },
   googleAnalytics: {
