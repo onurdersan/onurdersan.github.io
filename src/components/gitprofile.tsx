@@ -257,9 +257,7 @@ const GitProfile = ({ config }: { config: Config }) => {
                   )}
                   {sanitizedConfig.scholar?.authorId && (
                   <ScholarCard
-                    loading={loading}
-                    scholar={sanitizedConfig.scholar}
-                    googleAnalyticsId={sanitizedConfig.googleAnalytics.id}
+                
                   />
                 )}
                   {sanitizedConfig.projects.external.projects.length !== 0 && (
