@@ -1,3 +1,4 @@
+import ScholarCard from './scholar-card';
 import { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { formatDistance } from 'date-fns';
@@ -254,6 +255,13 @@ const GitProfile = ({ config }: { config: Config }) => {
                       publications={sanitizedConfig.publications}
                     />
                   )}
+                  {sanitizedConfig.scholar?.authorId && (
+                  <ScholarCard
+                    loading={loading}
+                    scholar={sanitizedConfig.scholar}
+                    googleAnalyticsId={sanitizedConfig.googleAnalytics.id}
+                  />
+                )}
                   {sanitizedConfig.projects.external.projects.length !== 0 && (
                     <ExternalProjectCard
                       loading={loading}
