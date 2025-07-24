@@ -124,6 +124,16 @@ export interface SanitizedThemeConfig {
   themes: Array<string>;
 }
 
+export interface SanitizedScholar {
+  authorId?: string;
+  limit: number;
+}
+
+export interface SanitizedConfig {
+  // ... diğer özellikler
+  scholar: SanitizedScholar; // Bu satırı ekleyin
+}
+
 export interface SanitizedConfig {
   github: SanitizedGithub;
   projects: SanitizedProjects;
