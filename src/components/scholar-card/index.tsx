@@ -1,6 +1,6 @@
 // src/components/scholar-card/index.tsx
 
-import { Fragment } from 'react';
+import React from 'react';
 import { PiBooks } from 'react-icons/pi';
 import { skeleton } from '../../utils';
 
