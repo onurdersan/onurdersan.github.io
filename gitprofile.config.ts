@@ -24,20 +24,20 @@ const CONFIG = {
         projects: ['arifszn/gitprofile', 'arifszn/pandora'], // List of repository names to display. example: ['arifszn/my-project1', 'arifszn/my-project2']
       },
     },
-    //external: {
-    //  display: false,
-    //  header: 'My Projects',
-    // To hide the `External Projects` section, keep it empty.
-    //  projects: [
-    //   {
-    //     title: 'Project Name',
-    //     description:
-    //        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut.',
-    //      imageUrl:
-    //        'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg',
-    //      link: 'https://example.com',
-    //   },
-    //  ],
+    external: {
+      display: false,
+      header: 'My Projects',
+     To hide the `External Projects` section, keep it empty.
+      projects: [
+       {
+         title: 'Project Name',
+         description:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut.',
+          imageUrl:
+            'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg',
+          link: 'https://example.com',
+       },
+      ],
     },
   },
   seo: { title: 'Derşan Onur', description: 'Pediatrician, M.D.', imageURL: '' },
@@ -67,12 +67,13 @@ const CONFIG = {
       '', // Empty fileUrl will hide the `Download Resume` button.
   },
   skills: [
-    'Çocuk Sağlığı ve Hastalıkları',
-    'Çocuk Palyatif Bakım',
-    'Çocuk Acil Tıp',
-    'e-Sağlık ve e-Öğrenme',
-    'Veri Analizi (Jamovi, R, SPSS, BlueSky)',
-    'Araştırma ve Metodoloji',
+    'Pediatrics',
+    'Pediatric Palliative Care',
+    'Pediatric Emergency Medicine',
+    'Pediatrics 4.0',
+    'e-Health and e-Learning',
+    'Data Analysis (Jamovi, R, SPSS, BlueSky)',
+    'Research and Methodology',
     'Flutter',
     'Git',
   ],
@@ -103,7 +104,7 @@ const CONFIG = {
   educations: [
     {
       institution: 'S.B.Ü. Dr. Behçet Uz Çocuk Hastalıkları ve Cerrahisi E.A.H.',
-      degree: 'Pediatric Specialit',
+      degree: 'Pediatric Specialist',
       from: '2016',
       to: '2020',
     },
