@@ -177,9 +177,9 @@ const CONFIG = {
         'Industry 4.0 represents the latest phase of industrial evolution, characterized by the seamless integration of cyber-physical systems, the Internet of Things, big data analytics, artificial intelligence, advanced robotics, and cloud computing, enabling smart, adaptive, and interconnected processes where physical, digital, and biological realms converge. In parallel, healthcare has progressed from the traditional, physician-centered model of Healthcare 1.0 by introducing medical devices and digitized records to Healthcare 4.0, which leverages Industry 4.0 technologies to create personalized, data-driven, and patient-centric systems. In this context, we hereby introduce Pediatrics 4.0 as a new paradigm that adapts these innovations to children’s unique developmental, physiological, and ethical considerations and aims to improve diagnostic precision, treatment personalization, and continuous monitoring in pediatric populations. Key applications include AI-driven diagnostic and predictive analytics, IoT-enabled remote monitoring, big data-powered epidemiological insights, robotic assistance in surgery and rehabilitation, and 3D printing for patient-specific devices and pharmaceuticals. However, realizing Pediatrics 4.0 requires addressing significant challenges—data privacy and security, algorithmic bias, interoperability and standardization, equitable access, regulatory alignment, the ethical complexities of consent, and long-term technology exposure. Future research should focus on explainable AI, pediatric-specific device design, robust data governance frameworks, dynamic ethical and legal guidelines, interdisciplinary collaboration, and workforce training to ensure these transformative technologies translate into safer, more effective, and more equitable child healthcare.',
     },
     {
-      title: 'Publication Title',
-      conferenceName: 'Conference Name',
-      journalName: '',
+      title: 'Evaluation of serum vitamin B12 and D, iron, ferritin, folate, calcium, phosphorus and magnesium levels in children in palliative care clinic: a single-center cross-sectional study',
+      conferenceName: '',
+      journalName: 'BMC Palliative Care',
       authors: 'Derşan Onur, Sunanur Çiftçi Sadıkoğlu, Nilgün Harputluoğlu, Behzat Özkan',
       link: 'https://doi.org/10.1186/s12904-024-01546-9',
       description:
