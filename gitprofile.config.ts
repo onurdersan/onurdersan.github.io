@@ -138,7 +138,7 @@ const CONFIG = {
     },
     {
     name: 'BTK Akademi',
-    body: 'a. Project Management Fundamentals
+    body: `a. Project Management Fundamentals
           b. Project and Risk Management
           c. Algorithm Design
           d. Entrepreneurship Fundamentals
@@ -147,7 +147,7 @@ const CONFIG = {
           g. Information Technology
           h. Deep Learning
           i. Natural Language Processing
-          j. Reinforcement Learning',
+          j. Reinforcement Learning`,
     year: '',
     link: '',
     },
