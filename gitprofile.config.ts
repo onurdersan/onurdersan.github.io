@@ -24,50 +24,41 @@ const CONFIG = {
         projects: ['arifszn/gitprofile', 'arifszn/pandora'], // List of repository names to display. example: ['arifszn/my-project1', 'arifszn/my-project2']
       },
     },
-    external: {
-      display: false,
-      header: 'My Projects',
-      // To hide the `External Projects` section, keep it empty.
-      projects: [
-        {
-          title: 'Project Name',
-          description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut.',
-          imageUrl:
-            'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg',
-          link: 'https://example.com',
-        },
-        {
-          title: 'Project Name',
-          description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut.',
-          imageUrl:
-            'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg',
-          link: 'https://example.com',
-        },
+    //external: {
+    //  display: false,
+    //  header: 'My Projects',
+    // To hide the `External Projects` section, keep it empty.
+    //  projects: [
+    //   {
+    //     title: 'Project Name',
+    //     description:
+    //        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut.',
+    //      imageUrl:
+    //        'https://img.freepik.com/free-vector/illustration-gallery-icon_53876-27002.jpg',
+    //      link: 'https://example.com',
+    //   },
       ],
     },
   },
-  seo: { title: 'Portfolio', description: '', imageURL: '' },
+  seo: { title: 'Derşan Onur', description: '', imageURL: '' },
   social: {
-    linkedin: 'ariful-alam',
+    linkedin: 'dersanonur',
     x: 'dersanonur',
-    mastodon: 'arifszn@mastodon.social',
     researchGate: '',
     facebook: '',
-    instagram: '',
+    instagram: 'dersanonur',
     reddit: '',
     threads: '',
     youtube: '', // example: 'pewdiepie'
     udemy: '',
     dribbble: '',
     behance: '',
-    medium: 'arifszn',
-    dev: 'arifszn',
-    stackoverflow: '', // example: '1/jeff-atwood'
+    medium: 'dersanonur',
+    dev: '',
+    stackoverflow: '',
     discord: '',
     telegram: '',
-    website: 'https://www.arifszn.com',
+    website: 'dersanonur.bio.link',
     phone: '',
     email: 'drdersanonur@gmail.com',
   },
@@ -87,18 +78,18 @@ const CONFIG = {
   ],
   experiences: [
     {
-      company: 'Company Name',
-      position: 'Position',
-      from: 'September 2021',
+      company: 'S.B.Ü. İzmir Tepecik Eğitim ve Araştırma Hastanesi',
+      position: 'Pediatrician',
+      from: 'February 2023',
       to: 'Present',
-      companyLink: 'https://example.com',
+      companyLink: 'https://tepecikeah.saglik.gov.tr/',
     },
     {
-      company: 'Company Name',
-      position: 'Position',
-      from: 'July 2019',
-      to: 'August 2021',
-      companyLink: 'https://example.com',
+      company: 'S.B.Ü. Dr. Behçet Uz Çocuk Hastalıkları ve Cerrahisi E.A.H.',
+      position: 'Pediatrician',
+      from: '2023',
+      to: '2024',
+      companyLink: 'https://behcetuzch.saglik.gov.tr/',
     },
   ],
   certifications: [
@@ -111,16 +102,16 @@ const CONFIG = {
   ],
   educations: [
     {
-      institution: 'Institution Name',
-      degree: 'Degree',
-      from: '2015',
-      to: '2019',
+      institution: 'S.B.Ü. Dr. Behçet Uz Çocuk Hastalıkları ve Cerrahisi E.A.H.',
+      degree: 'Pediatric Specialit',
+      from: '2016',
+      to: '2020',
     },
     {
-      institution: 'Institution Name',
-      degree: 'Degree',
-      from: '2012',
-      to: '2014',
+      institution: 'Dokuz Eylül Üniversitesi Tıp Fakültesi',
+      degree: 'MD',
+      from: '2008',
+      to: '2015',
     },
   ],
   publications: [
@@ -155,7 +146,7 @@ const CONFIG = {
   // Track visitor interaction and behavior. https://www.hotjar.com
   hotjar: { id: '', snippetVersion: 6 },
   themeConfig: {
-    defaultTheme: 'lofi',
+    defaultTheme: 'winter',
 
     // Hides the switch in the navbar
     // Useful if you want to support a single color mode
