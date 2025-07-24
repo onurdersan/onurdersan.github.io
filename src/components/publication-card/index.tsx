@@ -95,12 +95,12 @@ const PublicationCard = ({
                     </p>
                   )}
                   {item.journalName && (
-                    <p className="text-base-content opacity-20 text-sm">
+                    <p className="text-base-content opacity-60 text-sm">
                       {item.journalName}
                     </p>
                   )}
                   {item.authors && (
-                    <p className="text-base-content opacity-20 text-sm">
+                    <p className="text-base-content opacity-60 text-sm">
                       {item.authors}
                     </p>
                   )}
