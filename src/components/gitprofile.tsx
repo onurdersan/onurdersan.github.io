@@ -271,6 +271,12 @@ const GitProfile = ({ config }: { config: Config }) => {
                       blog={sanitizedConfig.blog}
                     />
                   )}
+                  {sanitizedConfig.websites.length > 0 && (
+                    <WebsitesCard
+                        loading={loading}
+                        websites={sanitizedConfig.websites}
+                    />
+                  )}
                 </div>
               </div>
             </div>
