@@ -88,19 +88,19 @@ const PublicationCard = ({
             <div className="w-full">
               <div className="px-4">
                 <div className="text-center w-full">
-                  <h2 className="font-medium mb-2">{item.title}</h2>
+                  <h2 className="text-base-content text-lg">{item.title}</h2>
                   {item.conferenceName && (
                     <p className="text-base-content opacity-5 text-sm">
                       {item.conferenceName}
                     </p>
                   )}
                   {item.journalName && (
-                    <p className="text-medium mb-2">
+                    <p className="text-base-content font-bold mb-4">
                       {item.journalName}
                     </p>
                   )}
                   {item.authors && (
-                    <p className="text-base-content opacity-90 text-sm">
+                    <p className="text-base-content opacity-90 font-medium text-sm mb-4">
                       {item.authors}
                     </p>
                   )}
