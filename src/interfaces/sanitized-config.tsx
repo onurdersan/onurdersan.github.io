@@ -1,3 +1,10 @@
+export interface SanitizedWebsite {
+  name: string;
+  link: string;
+  description?: string;
+  imageUrl?: string;
+}
+
 export interface SanitizedGithub {
   username: string;
 }
@@ -125,6 +132,7 @@ export interface SanitizedThemeConfig {
 }
 
 export interface SanitizedConfig {
+  websites: Array<SanitizedWebsite>;
   github: SanitizedGithub;
   projects: SanitizedProjects;
   seo: SanitizedSEO;
