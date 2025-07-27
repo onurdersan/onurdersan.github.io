@@ -105,6 +105,7 @@ export const getSanitizedConfig = (
           (item) => item.institution || item.degree || item.from || item.to,
         ) || [],
       publications: config?.publications?.filter((item) => item.title) || [],
+      websites: config?.websites || [],
       googleAnalytics: {
         id: config?.googleAnalytics?.id,
       },
