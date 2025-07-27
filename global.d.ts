@@ -311,18 +311,6 @@ interface ThemeConfig {
   themes?: Array<string>;
 }
 
-interface Scholar {
-  /**
-   * Google Scholar yazar ID'si
-   */
-  authorId?: string;
-
-  /**
-   * Gösterilecek makale sayısı
-   */
-  limit?: number;
-}
-
 interface Config {
   /**
    * GitHub config
@@ -343,11 +331,6 @@ interface Config {
    * SEO config
    */
   seo?: SEO;
-
-  /**
-   * Scholar config
-   */
-  scholar?: Scholar; // Bu satırı ekleyin
 
   /**
    * Social links
