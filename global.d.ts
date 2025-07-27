@@ -1,3 +1,10 @@
+interface Website {
+  name: string;
+  link: string;
+  description?: string;
+  imageUrl?: string;
+}
+
 interface Github {
   /**
    * GitHub org/user name
@@ -316,7 +323,7 @@ interface Config {
    * GitHub config
    */
   github: Github;
-
+  websites?: Array<Website>;
   /**
    * Vite's base url
    */
