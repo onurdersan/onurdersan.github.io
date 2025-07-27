@@ -95,7 +95,7 @@ const PublicationCard = ({
                     </p>
                   )}
                   {item.journalName && (
-                    <p className="text-medium text-sm">
+                    <p className="text-medium mb-2">
                       {item.journalName}
                     </p>
                   )}
