@@ -2,13 +2,8 @@
 
 const CONFIG = {
   github: {
-    username: 'onurdersan', // Your GitHub org/user name. (This is the only required config)
+    username: 'onurdersan',
   },
-  /**
-   * If you are deploying to https://<USERNAME>.github.io/, for example your repository is at https://github.com/arifszn/arifszn.github.io, set base to '/'.
-   * If you are deploying to https://<USERNAME>.github.io/<REPO_NAME>/,
-   * for example your repository is at https://github.com/arifszn/portfolio, then set base to '/portfolio/'.
-   */
   base: '/',
   projects: {
     github: {
@@ -205,10 +200,10 @@ const CONFIG = {
 
   websites: [
     {
-      name: 'Akademik Araç Kutusu',
-      link: 'https://onurdersan.github.io/akademic-arac-kutusu.html',
+      name: 'Academic Tools',
+      link: 'https://onurdersan.github.io/akademic-tools.html',
       description: 'Academic Tools',
-      imageUrl: '', // İsteğe bağlı: site için bir logo URL'si
+      imageUrl: '',
     },
     {
       name: '',
@@ -231,9 +226,8 @@ const CONFIG = {
     limit: 2, // How many articles to display. Max is 10.
   },
   googleAnalytics: {
-    id: 'G-VNHJYSWV6Y', // GA3 tracking id/GA4 tag id UA-XXXXXXXXX-X | G-XXXXXXXXXX
+    id: 'G-VNHJYSWV6Y',
   },
-  // Track visitor interaction and behavior. https://www.hotjar.com
   hotjar: { id: '', snippetVersion: 6 },
   themeConfig: {
     defaultTheme: 'winter',
