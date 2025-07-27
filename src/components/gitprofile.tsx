@@ -28,6 +28,7 @@ import ExternalProjectCard from './external-project-card';
 import BlogCard from './blog-card';
 import Footer from './footer';
 import PublicationCard from './publication-card';
+import WebsitesCard from './websites-card';
 
 /**
  * Renders the GitProfile component.
