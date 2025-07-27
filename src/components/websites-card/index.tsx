@@ -43,7 +43,7 @@ const WebsitesCard = ({
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-base sm:text-lg font-bold text-base-content truncate">
-                Diğer Projelerim ve Sitelerim
+                Tools Websites
               </h3>
             </div>
           </div>
