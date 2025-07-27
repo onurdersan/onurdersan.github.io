@@ -202,6 +202,29 @@ const CONFIG = {
     },
   ],
   // Display articles from your medium or dev account. (Optional)
+
+  websites: [
+    {
+      name: 'Akademik Araç Kutusu',
+      link: 'https://onurdersan.github.io/akademic-arac-kutusu.html',
+      description: 'Academic Tools',
+      imageUrl: '', // İsteğe bağlı: site için bir logo URL'si
+    },
+    {
+      name: '',
+      link: '',
+      description: '',
+      imageUrl: '', // İsteğe bağlı
+    },
+    {
+      name: '',
+      link: '',
+      description: '',
+      imageUrl: '', // İsteğe bağlı
+    },
+  ],
+
+  
   blog: {
     source: 'dev', // medium | dev
     username: 'dersanonur', // to hide blog section, keep it empty
