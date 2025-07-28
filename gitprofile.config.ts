@@ -200,9 +200,9 @@ const CONFIG = {
 
   websites: [
     {
-      name: 'Academic Tools',
-      link: 'https://onurdersan.github.io/akademic-tools.html',
-      description: 'Academic Tools',
+      name: 'Soon',
+      link: 'https://onurdersan.github.io/academic-tools.html',
+      description: '',
       imageUrl: '',
     },
     {
