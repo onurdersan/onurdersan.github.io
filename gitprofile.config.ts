@@ -3,6 +3,12 @@
 const CONFIG = {
   github: {
     username: 'onurdersan',
+    sortBy: 'stars',
+    limit: 10,
+    exclude: {
+      forks: false,
+      projects: []
+    }
   },
   base: '/',
   projects: {
@@ -27,7 +33,12 @@ const CONFIG = {
       header: '',
       // To hide the `External Projects` section, keep it empty.
       projects: [
-        {
+        {      title: 'Türk Çocukları Büyüme Persentil Hesaplayıcı',
+      description: 'Türk çocukları için büyüme persentil hesaplayıcısı (Olcay Neyzi referans değerleri)',
+      imageUrl: 'https://img.icons8.com/fluency/100/calculator.png',
+      link: 'javascript:void(0)', // Bu önemli!
+      technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS'],
+      id: 'persentil-calculator' // Benzersiz ID
     },
         {
           title: '',
