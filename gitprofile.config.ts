@@ -33,12 +33,12 @@ const CONFIG = {
       header: '',
       // To hide the `External Projects` section, keep it empty.
       projects: [
-        {      title: 'Türk Çocukları Büyüme Persentil Hesaplayıcı',
+        {      
+      title: 'Türk Çocukları Büyüme Persentil Hesaplayıcı',
       description: 'Türk çocukları için büyüme persentil hesaplayıcısı (Olcay Neyzi referans değerleri)',
       imageUrl: 'https://img.icons8.com/fluency/100/calculator.png',
-      link: 'javascript:void(0)', // Bu önemli!
-      technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS'],
-      id: 'persentil-calculator' // Benzersiz ID
+      link: 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/',
+      technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
     },
         {
           title: '',
@@ -292,169 +292,114 @@ const CONFIG = {
 
   // Optional Footer. Supports plain text or HTML.
   footer: 
-      <div id="calculatorModal" style="
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      z-index: 99999;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    ">
-      <div style="
-        width: 95%;
-        height: 90%;
-        max-width: 1200px;
-        background: white;
-        border-radius: 12px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-      ">
-        <button id="modalClose" style="
-          position: absolute;
-          top: 15px;
-          right: 20px;
-          background: #ff4444;
-          color: white;
-          border: none;
-          width: 35px;
-          height: 35px;
-          border-radius: 50%;
-          cursor: pointer;
-          z-index: 100000;
-          font-size: 18px;
-          font-weight: bold;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        ">&times;</button>
-        <iframe id="calculatorIframe" style="
-          width: 100%;
-          height: 100%;
-          border: none;
-        " src=""></iframe>
-      </div>
-    </div>
+// gitprofile.config.ts dosyasında footer kısmı:
+
+footer: `<script>
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    console.log('Footer script loaded');
     
-    <script>
-      (function() {
-        let modalInitialized = false;
+    // Persentil hesaplayıcı linkini bul ve modal olarak aç
+    const links = document.querySelectorAll('a');
+    let found = false;
+    
+    links.forEach(function(link) {
+      const href = link.href || '';
+      const text = link.textContent || '';
+      
+      if (href.includes('extraordinary-griffin-5e9625.netlify.app') || 
+          text.includes('Persentil') || 
+          text.includes('Büyüme')) {
         
-        function initModal() {
-          if (modalInitialized) return;
-          modalInitialized = true;
+        console.log('Found calculator link:', link);
+        found = true;
+        
+        link.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
           
-          console.log('Modal initializing...');
+          console.log('Calculator link clicked');
           
-          // Modal açma fonksiyonu
-          window.openCalculatorModal = function() {
-            console.log('Opening calculator modal');
-            const modal = document.getElementById('calculatorModal');
-            const iframe = document.getElementById('calculatorIframe');
-            if (modal && iframe) {
-              iframe.src = 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/';
-              modal.style.display = 'flex';
-              document.body.style.overflow = 'hidden';
+          // Modal div'i oluştur
+          const modal = document.createElement('div');
+          modal.id = 'calculatorModal';
+          modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+          
+          const content = document.createElement('div');
+          content.style.cssText = 'width:95%;height:90%;max-width:1200px;background:white;border-radius:12px;position:relative;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);';
+          
+          const closeBtn = document.createElement('button');
+          closeBtn.innerHTML = '&times;';
+          closeBtn.style.cssText = 'position:absolute;top:15px;right:20px;background:#ff4444;color:white;border:none;width:35px;height:35px;border-radius:50%;cursor:pointer;z-index:100000;font-size:18px;font-weight:bold;box-shadow:0 2px 10px rgba(0,0,0,0.3);';
+          closeBtn.title = 'Kapat';
+          
+          const iframe = document.createElement('iframe');
+          iframe.src = 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/';
+          iframe.style.cssText = 'width:100%;height:100%;border:none;';
+          iframe.title = 'Türk Çocukları Büyüme Persentil Hesaplayıcı';
+          
+          // Loading indicator
+          const loading = document.createElement('div');
+          loading.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#666;';
+          loading.innerHTML = '<div style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div><p>Hesaplayıcı yükleniyor...</p><style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>';
+          
+          content.appendChild(loading);
+          content.appendChild(closeBtn);
+          content.appendChild(iframe);
+          modal.appendChild(content);
+          document.body.appendChild(modal);
+          
+          document.body.style.overflow = 'hidden';
+          
+          // iframe yüklendiğinde loading'i kaldır
+          iframe.onload = function() {
+            if (content.contains(loading)) {
+              content.removeChild(loading);
             }
           };
           
-          // Modal kapatma fonksiyonu
-          window.closeCalculatorModal = function() {
-            console.log('Closing calculator modal');
-            const modal = document.getElementById('calculatorModal');
-            const iframe = document.getElementById('calculatorIframe');
-            if (modal && iframe) {
-              modal.style.display = 'none';
-              iframe.src = '';
+          // Kapatma fonksiyonu
+          function closeModal() {
+            if (document.body.contains(modal)) {
+              document.body.removeChild(modal);
               document.body.style.overflow = 'auto';
             }
+          }
+          
+          // Kapatma event'leri
+          closeBtn.onclick = closeModal;
+          
+          modal.onclick = function(e) {
+            if (e.target === modal) {
+              closeModal();
+            }
           };
           
-          // Event listener'ları ekle
-          const closeBtn = document.getElementById('modalClose');
-          if (closeBtn) {
-            closeBtn.onclick = window.closeCalculatorModal;
-          }
-          
-          // Modal dışına tıklama
-          const modal = document.getElementById('calculatorModal');
-          if (modal) {
-            modal.onclick = function(e) {
-              if (e.target === modal) {
-                window.closeCalculatorModal();
-              }
-            };
-          }
-          
-          // ESC tuşu
-          document.addEventListener('keydown', function(e) {
+          // ESC tuşu ile kapatma
+          function closeOnEscape(e) {
             if (e.key === 'Escape') {
-              window.closeCalculatorModal();
-            }
-          });
-          
-          // Persentil hesaplayıcı linkini yakala
-          function attachCalculatorLink() {
-            // Farklı selektörler dene
-            const selectors = [
-              'a[href*="persentil"]',
-              'a[href*="calculator"]', 
-              'a[href*="javascript:void(0)"]',
-              '[data-project="persentil-calculator"]',
-              '.project-card a',
-              '.card a'
-            ];
-            
-            let found = false;
-            
-            selectors.forEach(selector => {
-              const links = document.querySelectorAll(selector);
-              links.forEach(link => {
-                const text = link.textContent || link.innerText || '';
-                const title = link.title || '';
-                
-                if (text.includes('Persentil') || text.includes('Büyüme') || 
-                    title.includes('Persentil') || title.includes('Büyüme')) {
-                  console.log('Found calculator link:', link);
-                  link.href = 'javascript:void(0)';
-                  link.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.openCalculatorModal();
-                    return false;
-                  };
-                  found = true;
-                }
-              });
-            });
-            
-            if (!found) {
-              console.log('Calculator link not found, retrying...');
-              setTimeout(attachCalculatorLink, 1000);
-            } else {
-              console.log('Calculator link attached successfully');
+              closeModal();
+              document.removeEventListener('keydown', closeOnEscape);
             }
           }
+          document.addEventListener('keydown', closeOnEscape);
           
-          // Sayfa yüklendikten sonra link'i yakala
-          attachCalculatorLink();
-        }
+          return false;
+        };
         
-        // Sayfa tamamen yüklendiğinde çalıştır
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initModal);
-        } else {
-          initModal();
-        }
-        
-        // Ekstra güvenlik için setTimeout ile de çalıştır
-        setTimeout(initModal, 2000);
-        setTimeout(initModal, 5000);
-      })();
-    </script>
-};
-
-export default CONFIG;
+        // Link'in href'ini javascript:void(0) yap
+        link.href = 'javascript:void(0)';
+      }
+    });
+    
+    if (!found) {
+      console.log('Calculator link not found, will retry...');
+      // 3 saniye sonra tekrar dene
+      setTimeout(arguments.callee, 3000);
+    } else {
+      console.log('Calculator link successfully attached');
+    }
+    
+  }, 2000); // 2 saniye bekle
+});
+</script>`
