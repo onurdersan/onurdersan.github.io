@@ -290,10 +290,6 @@ const CONFIG = {
     ],
   },
 
-  // Optional Footer. Supports plain text or HTML.
-  footer: 
-// gitprofile.config.ts dosyasında footer kısmı:
-
 footer: `<script>
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
@@ -402,6 +398,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
   }, 2000); // 2 saniye bekle
 });
+</script>`
+  footer: `<script>
+function openCalculatorModal() {
+  const modal = document.createElement('div');
+  modal.innerHTML = '<iframe src="https://onurdersan.github.io/persentil-modal.html" style="position:fixed;top:0;left:0;width:100%;height:100%;border:none;z-index:99999;"></iframe>';
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+  
+  window.addEventListener('message', function(e) {
+    if (e.data === 'closeCalculatorModal') {
+      document.body.removeChild(modal);
+      document.body.style.overflow = 'auto';
+    }
+  });
+}
+
+setTimeout(function() {
+  document.querySelectorAll('a').forEach(function(link) {
+    if (link.href.includes('netlify.app') || link.textContent.includes('Persentil')) {
+      link.onclick = function(e) {
+        e.preventDefault();
+        openCalculatorModal();
+        return false;
+      };
+    }
+  });
+}, 2000);
 </script>`
 };
 
