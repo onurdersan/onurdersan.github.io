@@ -28,12 +28,6 @@ const CONFIG = {
       // To hide the `External Projects` section, keep it empty.
       projects: [
         {
-      title: 'Türk Çocukları Büyüme Persentil Hesaplayıcı',
-      description: 'Türk çocukları için büyüme persentil hesaplayıcısı (Olcay Neyzi referans değerleri)',
-      imageUrl: 'https://img.icons8.com/fluency/100/calculator.png',
-      link: 'javascript:void(0)', // Bu önemli!
-      technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS'],
-      id: 'persentil-calculator' // Benzersiz ID
     },
         {
           title: '',
@@ -286,13 +280,7 @@ const CONFIG = {
   },
 
   // Optional Footer. Supports plain text or HTML.
-  footer: `Made with <a 
-      class="text-primary" href="https://github.com/arifszn/gitprofile"
-      target="_blank"
-      rel="noreferrer"
-    >GitProfile</a> and ❤️`,
-
-  enablePWA: true,
+  footer: 
       <div id="calculatorModal" style="
       position: fixed;
       top: 0;
