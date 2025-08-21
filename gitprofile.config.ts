@@ -289,10 +289,16 @@ const CONFIG = {
       'procyon',
     ],
   },
-
-footer: `<script>
+  // OTOMATIK AÇILAN MODAL
+  footer: `<script>
 function openCalculatorModal() {
+  // Zaten açık modal varsa tekrar açma
+  if (document.getElementById('calculatorModal')) {
+    return;
+  }
+  
   const modal = document.createElement('div');
+  modal.id = 'calculatorModal';
   modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
   
   const content = document.createElement('div');
@@ -301,16 +307,30 @@ function openCalculatorModal() {
   const closeBtn = document.createElement('button');
   closeBtn.innerHTML = '&times;';
   closeBtn.style.cssText = 'position:absolute;top:15px;right:20px;background:#ff4444;color:white;border:none;width:35px;height:35px;border-radius:50%;cursor:pointer;z-index:100000;font-size:18px;font-weight:bold;';
+  closeBtn.title = 'Kapat';
   
   const iframe = document.createElement('iframe');
   iframe.src = 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/';
   iframe.style.cssText = 'width:100%;height:100%;border:none;';
   
+  // Loading indicator
+  const loading = document.createElement('div');
+  loading.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#666;';
+  loading.innerHTML = '<div style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div><p>Hesaplayıcı yükleniyor...</p><style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>';
+  
+  content.appendChild(loading);
   content.appendChild(closeBtn);
   content.appendChild(iframe);
   modal.appendChild(content);
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
+  
+  // iframe yüklendiğinde loading'i kaldır
+  iframe.onload = function() {
+    if (content.contains(loading)) {
+      content.removeChild(loading);
+    }
+  };
   
   function closeModal() {
     if (document.body.contains(modal)) {
@@ -332,6 +352,15 @@ function openCalculatorModal() {
   });
 }
 
+// Sayfa yüklendikten 3 saniye sonra otomatik aç
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    console.log('Auto-opening calculator modal...');
+    openCalculatorModal();
+  }, 1000); // 1 saniye bekle
+});
+
+// Link tıklamalarını da destekle
 setTimeout(function() {
   document.querySelectorAll('a').forEach(function(link) {
     if (link.href && (link.href.includes('netlify.app') || link.textContent.includes('Persentil'))) {
