@@ -403,3 +403,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 2000); // 2 saniye bekle
 });
 </script>`
+};
+
+export default config;
