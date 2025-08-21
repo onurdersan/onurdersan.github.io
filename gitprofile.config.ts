@@ -290,88 +290,263 @@ const CONFIG = {
     ],
   },
   // OTOMATIK AÇILAN MODAL
-  footer: `<script>
-function openCalculatorModal() {
-  // Zaten açık modal varsa tekrar açma
-  if (document.getElementById('calculatorModal')) {
-    return;
+footer: `<script>
+(function() {
+  let modalOpened = false; // Global flag to prevent multiple modals
+  
+  function openCalculatorModal() {
+    console.log('Attempting to open calculator modal...');
+    
+    // Zaten açık modal varsa tekrar açma
+    if (modalOpened || document.getElementById('calculatorModal')) {
+      console.log('Modal already open, skipping...');
+      return;
+    }
+    
+    modalOpened = true;
+    
+    const modal = document.createElement('div');
+    modal.id = 'calculatorModal';
+    modal.style.cssText = `
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: rgba(0,0,0,0.8) !important;
+      z-index: 999999 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 20px !important;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+      width: 95% !important;
+      height: 90% !important;
+      max-width: 1200px !important;
+      background: white !important;
+      border-radius: 12px !important;
+      position: relative !important;
+      overflow: hidden !important;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5) !important;
+    `;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = `
+      position: absolute !important;
+      top: 15px !important;
+      right: 20px !important;
+      background: #ff4444 !important;
+      color: white !important;
+      border: none !important;
+      width: 35px !important;
+      height: 35px !important;
+      border-radius: 50% !important;
+      cursor: pointer !important;
+      z-index: 1000000 !important;
+      font-size: 18px !important;
+      font-weight: bold !important;
+      transition: background 0.3s !important;
+    `;
+    closeBtn.title = 'Kapat';
+    
+    // Hover effect for close button
+    closeBtn.addEventListener('mouseenter', function() {
+      this.style.background = '#cc0000 !important';
+    });
+    closeBtn.addEventListener('mouseleave', function() {
+      this.style.background = '#ff4444 !important';
+    });
+    
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/';
+    iframe.style.cssText = `
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
+    `;
+    iframe.title = 'Türk Çocukları Büyüme Persentil Hesaplayıcı';
+    
+    // Loading indicator
+    const loading = document.createElement('div');
+    loading.style.cssText = `
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%,-50%) !important;
+      text-align: center !important;
+      color: #666 !important;
+      z-index: 1000001 !important;
+    `;
+    loading.innerHTML = \`
+      <div style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #667eea;border-radius:50%;animation:calculatorSpin 1s linear infinite;margin:0 auto 16px;"></div>
+      <p>Hesaplayıcı yükleniyor...</p>
+      <style>
+        @keyframes calculatorSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    \`;
+    
+    content.appendChild(loading);
+    content.appendChild(closeBtn);
+    content.appendChild(iframe);
+    modal.appendChild(content);
+    
+    // Add to body
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    console.log('Modal created and added to DOM');
+    
+    // iframe yüklendiğinde loading'i kaldır
+    iframe.addEventListener('load', function() {
+      console.log('Calculator iframe loaded');
+      if (content.contains(loading)) {
+        content.removeChild(loading);
+      }
+    });
+    
+    // Error handling for iframe
+    iframe.addEventListener('error', function() {
+      console.log('Calculator iframe error');
+      if (content.contains(loading)) {
+        loading.innerHTML = \`
+          <p style="color: #999;">Hesaplayıcı yüklenirken bir sorun oluştu.</p>
+          <a href="https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/" 
+             target="_blank" 
+             style="color: #667eea; text-decoration: none; font-weight: bold;">
+            Direkt linke git →
+          </a>
+        \`;
+      }
+    });
+    
+    // Timeout for loading
+    setTimeout(function() {
+      if (content.contains(loading)) {
+        loading.innerHTML = \`
+          <p style="color: #999;">Yükleme uzun sürüyor...</p>
+          <a href="https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/" 
+             target="_blank" 
+             style="color: #667eea; text-decoration: none; font-weight: bold;">
+            Direkt linke git →
+          </a>
+        \`;
+      }
+    }, 8000);
+    
+    function closeModal() {
+      console.log('Closing modal...');
+      if (document.body.contains(modal)) {
+        document.body.removeChild(modal);
+        document.body.style.overflow = '';
+      }
+      modalOpened = false;
+    }
+    
+    // Event listeners for closing
+    closeBtn.addEventListener('click', closeModal);
+    
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+    
+    // ESC key listener
+    const escListener = function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+        document.removeEventListener('keydown', escListener);
+      }
+    };
+    document.addEventListener('keydown', escListener);
   }
   
-  const modal = document.createElement('div');
-  modal.id = 'calculatorModal';
-  modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
-  
-  const content = document.createElement('div');
-  content.style.cssText = 'width:95%;height:90%;max-width:1200px;background:white;border-radius:12px;position:relative;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,0.5);';
-  
-  const closeBtn = document.createElement('button');
-  closeBtn.innerHTML = '&times;';
-  closeBtn.style.cssText = 'position:absolute;top:15px;right:20px;background:#ff4444;color:white;border:none;width:35px;height:35px;border-radius:50%;cursor:pointer;z-index:100000;font-size:18px;font-weight:bold;';
-  closeBtn.title = 'Kapat';
-  
-  const iframe = document.createElement('iframe');
-  iframe.src = 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/';
-  iframe.style.cssText = 'width:100%;height:100%;border:none;';
-  
-  // Loading indicator
-  const loading = document.createElement('div');
-  loading.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#666;';
-  loading.innerHTML = '<div style="width:40px;height:40px;border:4px solid #f3f3f3;border-top:4px solid #667eea;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div><p>Hesaplayıcı yükleniyor...</p><style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>';
-  
-  content.appendChild(loading);
-  content.appendChild(closeBtn);
-  content.appendChild(iframe);
-  modal.appendChild(content);
-  document.body.appendChild(modal);
-  document.body.style.overflow = 'hidden';
-  
-  // iframe yüklendiğinde loading'i kaldır
-  iframe.onload = function() {
-    if (content.contains(loading)) {
-      content.removeChild(loading);
+  // Multiple attempts to open modal
+  function tryOpenModal() {
+    console.log('Trying to open modal...');
+    
+    // Immediate attempt
+    if (document.readyState === 'complete') {
+      setTimeout(openCalculatorModal, 500);
     }
-  };
-  
-  function closeModal() {
-    if (document.body.contains(modal)) {
-      document.body.removeChild(modal);
-      document.body.style.overflow = 'auto';
+    
+    // DOMContentLoaded attempt
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Content Loaded');
+        setTimeout(openCalculatorModal, 1000);
+      });
     }
-  }
-  
-  closeBtn.onclick = closeModal;
-  modal.onclick = function(e) {
-    if (e.target === modal) closeModal();
-  };
-  
-  document.addEventListener('keydown', function closeOnEsc(e) {
-    if (e.key === 'Escape') {
-      closeModal();
-      document.removeEventListener('keydown', closeOnEsc);
-    }
-  });
-}
-
-// Sayfa yüklendikten 3 saniye sonra otomatik aç
-document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function() {
-    console.log('Auto-opening calculator modal...');
-    openCalculatorModal();
-  }, 1000); // 1 saniye bekle
-});
-
-// Link tıklamalarını da destekle
-setTimeout(function() {
-  document.querySelectorAll('a').forEach(function(link) {
-    if (link.href && (link.href.includes('netlify.app') || link.textContent.includes('Persentil'))) {
-      link.onclick = function(e) {
-        e.preventDefault();
+    
+    // Window load attempt
+    window.addEventListener('load', function() {
+      console.log('Window loaded');
+      setTimeout(function() {
+        if (!modalOpened) {
+          openCalculatorModal();
+        }
+      }, 1500);
+    });
+    
+    // Backup attempt after 3 seconds
+    setTimeout(function() {
+      console.log('Backup attempt...');
+      if (!modalOpened) {
         openCalculatorModal();
-        return false;
-      };
+      }
+    }, 3000);
+  }
+  
+  // Start trying to open modal
+  tryOpenModal();
+  
+  // Make function globally available for manual testing
+  window.openCalculatorModal = openCalculatorModal;
+  
+  // Link hijacking - run after a delay to ensure DOM is ready
+  setTimeout(function() {
+    console.log('Setting up link hijacking...');
+    
+    function hijackLinks() {
+      const links = document.querySelectorAll('a');
+      links.forEach(function(link) {
+        const href = link.getAttribute('href') || '';
+        const text = link.textContent || '';
+        
+        if (href.includes('netlify.app') || 
+            href.includes('persentil') || 
+            text.toLowerCase().includes('persentil') ||
+            text.toLowerCase().includes('hesaplayıcı') ||
+            href.includes('extraordinary-griffin')) {
+          
+          console.log('Hijacking link:', link);
+          
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Link clicked, opening modal instead');
+            openCalculatorModal();
+            return false;
+          });
+        }
+      });
     }
-  });
-}, 2000);
+    
+    hijackLinks();
+    
+    // Re-run hijacking periodically in case new links are added dynamically
+    setInterval(hijackLinks, 2000);
+    
+  }, 2000);
+  
+})();
 </script>`
 };
 
