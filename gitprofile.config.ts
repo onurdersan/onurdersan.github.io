@@ -290,7 +290,8 @@ const CONFIG = {
     ],
   },
   // OTOMATIK AÇILAN MODAL
-footer: `<script>
+footer: `<div id="calculatorModal"></div>
+<script>
 (function() {
   let modalOpened = false; // Global flag to prevent multiple modals
   
