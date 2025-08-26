@@ -41,12 +41,10 @@ const CONFIG = {
       technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
     },
         {
-          title: '',
-          description:
-            '',
-          imageUrl:
-            '',
-          link: '',
+          title: 'Micronutrient Dietary Reference Values',
+          description: 'Comparison of Food and Nutrition Board (FNB), European Food Safety Authority (EFSA), and Turkish Food Codex (TFC) data.',
+          imageUrl: 'https://img.icons8.com/fluency/100/doctors-bag.png',
+          link: 'https://onurdersan.github.io/micronutrients/',
         },
       ],
     },
