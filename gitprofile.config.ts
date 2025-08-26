@@ -203,11 +203,11 @@ const CONFIG = {
 
   websites: [
     {
-  name: 'Türk Çocukları Büyüme Persentil Hesaplayıcı',
-  description: 'Türk çocukları için büyüme persentil hesaplayıcısı (Olcay Neyzi referans değerleri)',
-  imageUrl: 'https://img.icons8.com/fluency/100/calculator.png',
-  link: 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/',
-  technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
+  name: '',
+  description: '',
+  imageUrl: '',
+  link: '',
+  technologies: '',
 },
     {
       name: '',
