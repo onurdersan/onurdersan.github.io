@@ -39,12 +39,8 @@ const GitProfile = ({ config }: Props) => {
   const [githubProjects, setGithubProjects] = useState<any[]>([]);
   const [githubProjectsLoading, setGithubProjectsLoading] =
     useState<boolean>(false);
-  const [mediumArticles, setMediumArticles] = useState<any[]>([]);
-  const [mediumArticlesLoading, setMediumArticlesLoading] =
-    useState<boolean>(false);
-  const [devToArticles, setDevToArticles] = useState<any[]>([]);
-  const [devToArticlesLoading, setDevToArticlesLoading] =
-    useState<boolean>(false);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [articlesLoading, setArticlesLoading] = useState<boolean>(false);
 
   // Modal'ı kontrol etmek için state ekliyoruz
   const [selectedProject, setSelectedProject] =
@@ -93,10 +89,7 @@ const GitProfile = ({ config }: Props) => {
   }, [sanitizedConfig.github.username]);
 
   const fetchGithubProjects = useCallback(async () => {
-    if (
-      !sanitizedConfig.github.username ||
-      sanitizedConfig.projects.github.mode === 'disabled'
-    ) {
+    if (sanitizedConfig.projects.github.mode !== 'automatic') {
       return;
     }
 
@@ -104,7 +97,7 @@ const GitProfile = ({ config }: Props) => {
 
     try {
       const res = await fetch(
-        `https://api.github.com/users/${sanitizedConfig.github.username}/repos?sort=${sanitizedConfig.projects.github.sortBy}&direction=${sanitizedConfig.projects.github.orderBy}&per_page=${sanitizedConfig.projects.github.limit}`,
+        `https://api.github.com/users/${sanitizedConfig.github.username}/repos?sort=${sanitizedConfig.projects.github.automatic.sortBy}&direction=desc&per_page=${sanitizedConfig.projects.github.automatic.limit}`,
       );
       const json = await res.json();
 
@@ -120,89 +113,59 @@ const GitProfile = ({ config }: Props) => {
     }
   }, [
     sanitizedConfig.github.username,
-    sanitizedConfig.projects.github.sortBy,
-    sanitizedConfig.projects.github.orderBy,
-    sanitizedConfig.projects.github.limit,
+    sanitizedConfig.projects.github.automatic.sortBy,
+    sanitizedConfig.projects.github.automatic.limit,
     sanitizedConfig.projects.github.mode,
   ]);
 
-  const fetchMediumArticles = useCallback(async () => {
-    if (
-      !sanitizedConfig.blog.medium.username ||
-      sanitizedConfig.blog.medium.mode === 'disabled'
-    ) {
+  const fetchArticles = useCallback(async () => {
+    if (sanitizedConfig.blog.source === '' || !sanitizedConfig.blog.username) {
       return;
     }
 
-    setMediumArticlesLoading(true);
+    setArticlesLoading(true);
 
     try {
-      const res = await fetch(
-        `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${sanitizedConfig.blog.medium.username}`,
-      );
+      let res;
+      if (sanitizedConfig.blog.source === 'medium') {
+        res = await fetch(
+          `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${sanitizedConfig.blog.username}`,
+        );
+      } else if (sanitizedConfig.blog.source === 'dev') {
+        res = await fetch(
+          `https://dev.to/api/articles?username=${sanitizedConfig.blog.username}`,
+        );
+      } else {
+        return;
+      }
+
       const json = await res.json();
 
       if (res.status !== 200) {
         return;
       }
 
-      setMediumArticles(
-        json.items.slice(0, sanitizedConfig.blog.medium.limit),
-      );
-    } catch (error) {
-      //
-    } finally {
-      setMediumArticlesLoading(false);
-    }
-  }, [
-    sanitizedConfig.blog.medium.username,
-    sanitizedConfig.blog.medium.limit,
-    sanitizedConfig.blog.medium.mode,
-  ]);
-
-  const fetchDevToArticles = useCallback(async () => {
-    if (
-      !sanitizedConfig.blog.dev.username ||
-      sanitizedConfig.blog.dev.mode === 'disabled'
-    ) {
-      return;
-    }
-
-    setDevToArticlesLoading(true);
-
-    try {
-      const res = await fetch(
-        `https://dev.to/api/articles?username=${sanitizedConfig.blog.dev.username}`,
-      );
-      const json = await res.json();
-
-      if (res.status !== 200) {
-        return;
+      if (sanitizedConfig.blog.source === 'medium') {
+        setArticles(json.items.slice(0, sanitizedConfig.blog.limit));
+      } else if (sanitizedConfig.blog.source === 'dev') {
+        setArticles(json.slice(0, sanitizedConfig.blog.limit));
       }
-
-      setDevToArticles(json.slice(0, sanitizedConfig.blog.dev.limit));
     } catch (error) {
       //
     } finally {
-      setDevToArticlesLoading(false);
+      setArticlesLoading(false);
     }
   }, [
-    sanitizedConfig.blog.dev.username,
-    sanitizedConfig.blog.dev.limit,
-    sanitizedConfig.blog.dev.mode,
+    sanitizedConfig.blog.source,
+    sanitizedConfig.blog.username,
+    sanitizedConfig.blog.limit,
   ]);
 
   useEffect(() => {
     fetchProfile();
     fetchGithubProjects();
-    fetchMediumArticles();
-    fetchDevToArticles();
-  }, [
-    fetchProfile,
-    fetchGithubProjects,
-    fetchMediumArticles,
-    fetchDevToArticles,
-  ]);
+    fetchArticles();
+  }, [fetchProfile, fetchGithubProjects, fetchArticles]);
 
   if (error) {
     return (
@@ -280,17 +243,19 @@ const GitProfile = ({ config }: Props) => {
             </div>
             <div className="col-span-1 lg:col-span-2">
               {/* External Projects */}
-              {(sanitizedConfig as any).externalProjects.length > 0 && (
+              {sanitizedConfig.projects.external.display && (
                 <div className="card-base">
-                  <div className="text-xl font-bold">Projeler</div>
+                  <div className="text-xl font-bold">
+                    {sanitizedConfig.projects.external.header}
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {(sanitizedConfig as any).externalProjects.map(
-                      (project: SanitizedExternalProject, index: number) => (
+                    {sanitizedConfig.projects.external.projects.map(
+                      (project, index) => (
                         <ExternalProjectCard
                           key={index}
                           project={project}
                           loading={loading}
-                          onClick={handleProjectClick} // onClick handler'ını iletiyoruz
+                          onClick={handleProjectClick}
                         />
                       ),
                     )}
@@ -298,13 +263,17 @@ const GitProfile = ({ config }: Props) => {
                 </div>
               )}
               {/* Github Projects */}
-              {sanitizedConfig.projects.github.mode !== 'disabled' && (
+              {sanitizedConfig.projects.github.display && (
                 <div className="card-base mt-6">
-                  <div className="text-xl font-bold">GitHub Projeleri</div>
+                  <div className="text-xl font-bold">
+                    {sanitizedConfig.projects.github.header}
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     {githubProjectsLoading
                       ? [
-                          ...Array(sanitizedConfig.projects.github.limit).keys(),
+                          ...Array(
+                            sanitizedConfig.projects.github.automatic.limit,
+                          ).keys(),
                         ].map((_, index) => (
                           <GithubProjectCard
                             key={index}
@@ -324,36 +293,12 @@ const GitProfile = ({ config }: Props) => {
                 </div>
               )}
               {/* Blog */}
-              {sanitizedConfig.blog.medium.mode !== 'disabled' && (
+              {sanitizedConfig.blog.display && (
                 <div className="card-base mt-6">
-                  <div className="text-xl font-bold">Medium</div>
+                  <div className="text-xl font-bold">Blog</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {mediumArticlesLoading
-                      ? [
-                          ...Array(sanitizedConfig.blog.medium.limit).keys(),
-                        ].map((_, index) => (
-                          <BlogCard
-                            key={index}
-                            article={null}
-                            loading={true}
-                          />
-                        ))
-                      : mediumArticles.map((article, index) => (
-                          <BlogCard
-                            key={index}
-                            article={article}
-                            loading={false}
-                          />
-                        ))}
-                  </div>
-                </div>
-              )}
-              {sanitizedConfig.blog.dev.mode !== 'disabled' && (
-                <div className="card-base mt-6">
-                  <div className="text-xl font-bold">Dev.to</div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {devToArticlesLoading
-                      ? [...Array(sanitizedConfig.blog.dev.limit).keys()].map(
+                    {articlesLoading
+                      ? [...Array(sanitizedConfig.blog.limit).keys()].map(
                           (_, index) => (
                             <BlogCard
                               key={index}
@@ -362,7 +307,7 @@ const GitProfile = ({ config }: Props) => {
                             />
                           ),
                         )
-                      : devToArticles.map((article, index) => (
+                      : articles.map((article, index) => (
                           <BlogCard
                             key={index}
                             article={article}
