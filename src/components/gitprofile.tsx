@@ -18,7 +18,6 @@ import GithubProjectCard from './github-project-card';
 import Footer from './footer';
 import ErrorPage from './error-page';
 import ThemeChanger from './theme-changer';
-import colors from '../data/colors.json';
 import Modal from './modal';
 import { DEFAULT_PROFILE } from '../constants';
 import { Config } from '../../gitprofile.config';
@@ -205,8 +204,6 @@ const GitProfile = ({ config }: Props) => {
     fetchDevToArticles,
   ]);
 
-  const name = profile?.name || DEFAULT_PROFILE.name;
-
   if (error) {
     return (
       <ErrorPage
@@ -255,18 +252,15 @@ const GitProfile = ({ config }: Props) => {
               <AvatarCard
                 profile={profile || DEFAULT_PROFILE}
                 loading={loading}
-                config={sanitizedConfig}
+                avatarRing={sanitizedConfig.themeConfig.avatarRing}
               />
               <DetailsCard
                 profile={profile || DEFAULT_PROFILE}
                 loading={loading}
-                config={sanitizedConfig}
+                github={sanitizedConfig.github.username}
+                social={sanitizedConfig.social}
               />
-              <SkillCard
-                skills={sanitizedConfig.skills}
-                loading={loading}
-                colors={colors}
-              />
+              <SkillCard skills={sanitizedConfig.skills} loading={loading} />
               <ExperienceCard
                 experiences={sanitizedConfig.experiences}
                 loading={loading}
@@ -286,18 +280,20 @@ const GitProfile = ({ config }: Props) => {
             </div>
             <div className="col-span-1 lg:col-span-2">
               {/* External Projects */}
-              {sanitizedConfig.externalProjects.length > 0 && (
+              {(sanitizedConfig as any).externalProjects.length > 0 && (
                 <div className="card-base">
                   <div className="text-xl font-bold">Projeler</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {sanitizedConfig.externalProjects.map((project, index) => (
-                      <ExternalProjectCard
-                        key={index}
-                        project={project}
-                        loading={loading}
-                        onClick={handleProjectClick} // onClick handler'ını iletiyoruz
-                      />
-                    ))}
+                    {(sanitizedConfig as any).externalProjects.map(
+                      (project: SanitizedExternalProject, index: number) => (
+                        <ExternalProjectCard
+                          key={index}
+                          project={project}
+                          loading={loading}
+                          onClick={handleProjectClick} // onClick handler'ını iletiyoruz
+                        />
+                      ),
+                    )}
                   </div>
                 </div>
               )}
@@ -386,11 +382,7 @@ const GitProfile = ({ config }: Props) => {
         loading={loading}
         themeConfig={sanitizedConfig.themeConfig}
       />
-      <Footer
-        loading={loading}
-        name={name}
-        github={sanitizedConfig.social.github}
-      />
+      <Footer loading={loading} content={sanitizedConfig.footer} />
       {/* Modal'ı sayfanın sonunda render ediyoruz */}
       <Modal
         isOpen={!!selectedProject}
