@@ -1,9 +1,19 @@
-import { Fragment, useCallback, useEffect, useState } from 'react';
-import { getInitialTheme, getSanitizedConfig, skeleton } from '../utils';
 import {
-  SanitizedConfig,
-  SanitizedExternalProject,
-} from '../interfaces/sanitized-config';
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  DEFAULT_THEMES,
+  DEFAULT_PROFILE,
+  DEFAULT_CONFIG,
+  SKELETON_STYLES,
+} from '../constants';
+import { getInitialTheme, getSanitizedConfig, skeleton } from '../utils';
+import { SanitizedConfig } from '../interfaces/sanitized-config';
 import { Profile } from '../interfaces/profile';
 import AvatarCard from './avatar-card';
 import DetailsCard from './details-card';
@@ -18,78 +28,48 @@ import GithubProjectCard from './github-project-card';
 import Footer from './footer';
 import ErrorPage from './error-page';
 import ThemeChanger from './theme-changer';
-import Modal from './modal';
-import { DEFAULT_PROFILE } from '../constants';
-import { Config } from '../../gitprofile.config';
+import colors from '../data/colors.json';
 
 type Props = {
-  config: Config;
+  config: Record<string, any>;
+  profile: Profile | null;
+  loading: boolean;
+  error: any;
 };
 
-const GitProfile = ({ config }: Props) => {
+const GitProfile = ({ config, profile, loading, error }: Props) => {
   const [sanitizedConfig] = useState<SanitizedConfig>(
     getSanitizedConfig(config),
   );
-  const [theme, setTheme] = useState<string>(() =>
-    getInitialTheme(sanitizedConfig.themeConfig),
-  );
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<any>(null);
+  const [theme, setTheme] = useState<string>(getInitialTheme());
+  const [_, setAvatar] = useState<string | null>(null);
   const [githubProjects, setGithubProjects] = useState<any[]>([]);
   const [githubProjectsLoading, setGithubProjectsLoading] =
     useState<boolean>(false);
-  const [articles, setArticles] = useState<any[]>([]);
-  const [articlesLoading, setArticlesLoading] = useState<boolean>(false);
-
-  // Modal'ı kontrol etmek için state ekliyoruz
-  const [selectedProject, setSelectedProject] =
-    useState<SanitizedExternalProject | null>(null);
-
-  // Proje kartına tıklandığında çalışacak fonksiyon
-  const handleProjectClick = (project: SanitizedExternalProject) => {
-    setSelectedProject(project);
-  };
-
-  // Modal'ı kapatacak fonksiyon
-  const handleCloseModal = () => {
-    setSelectedProject(null);
-  };
+  const [mediumArticles, setMediumArticles] = useState<any[]>([]);
+  const [mediumArticlesLoading, setMediumArticlesLoading] =
+    useState<boolean>(false);
+  const [devToArticles, setDevToArticles] = useState<any[]>([]);
+  const [devToArticlesLoading, setDevToArticlesLoading] =
+    useState<boolean>(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      const res = await fetch(
-        `https://api.github.com/users/${sanitizedConfig.github.username}`,
-      );
-      const json = await res.json();
-
-      if (res.status !== 200) {
-        setError({
-          status: res.status,
-          title: 'Error',
-          subTitle: 'Could not fetch profile.',
-        });
-        return;
-      }
-
-      setProfile(json);
-    } catch (err) {
-      setError({
-        status: 500,
-        title: 'Error',
-        subTitle: 'Could not fetch profile.',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [sanitizedConfig.github.username]);
+  const fontStyle = useMemo(() => {
+    return sanitizedConfig.font
+      ? {
+          fontFamily: sanitizedConfig.font,
+        }
+      : {};
+  }, [sanitizedConfig.font]);
 
   const fetchGithubProjects = useCallback(async () => {
-    if (sanitizedConfig.projects.github.mode !== 'automatic') {
+    if (
+      !sanitizedConfig.projects.github.username ||
+      sanitizedConfig.projects.github.mode === 'disabled'
+    ) {
       return;
     }
 
@@ -97,7 +77,7 @@ const GitProfile = ({ config }: Props) => {
 
     try {
       const res = await fetch(
-        `https://api.github.com/users/${sanitizedConfig.github.username}/repos?sort=${sanitizedConfig.projects.github.automatic.sortBy}&direction=desc&per_page=${sanitizedConfig.projects.github.automatic.limit}`,
+        `https://api.github.com/users/${sanitizedConfig.projects.github.username}/repos?sort=${sanitizedConfig.projects.github.sortBy}&direction=${sanitizedConfig.projects.github.orderBy}&per_page=${sanitizedConfig.projects.github.limit}`,
       );
       const json = await res.json();
 
@@ -112,60 +92,86 @@ const GitProfile = ({ config }: Props) => {
       setGithubProjectsLoading(false);
     }
   }, [
-    sanitizedConfig.github.username,
-    sanitizedConfig.projects.github.automatic.sortBy,
-    sanitizedConfig.projects.github.automatic.limit,
+    sanitizedConfig.projects.github.username,
+    sanitizedConfig.projects.github.sortBy,
+    sanitizedConfig.projects.github.orderBy,
+    sanitizedConfig.projects.github.limit,
     sanitizedConfig.projects.github.mode,
   ]);
 
-  const fetchArticles = useCallback(async () => {
-    if (sanitizedConfig.blog.source === '' || !sanitizedConfig.blog.username) {
+  const fetchMediumArticles = useCallback(async () => {
+    if (
+      !sanitizedConfig.blog.medium.username ||
+      sanitizedConfig.blog.medium.mode === 'disabled'
+    ) {
       return;
     }
 
-    setArticlesLoading(true);
+    setMediumArticlesLoading(true);
 
     try {
-      let res;
-      if (sanitizedConfig.blog.source === 'medium') {
-        res = await fetch(
-          `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${sanitizedConfig.blog.username}`,
-        );
-      } else if (sanitizedConfig.blog.source === 'dev') {
-        res = await fetch(
-          `https://dev.to/api/articles?username=${sanitizedConfig.blog.username}`,
-        );
-      } else {
-        return;
-      }
-
+      const res = await fetch(
+        `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${sanitizedConfig.blog.medium.username}`,
+      );
       const json = await res.json();
 
       if (res.status !== 200) {
         return;
       }
 
-      if (sanitizedConfig.blog.source === 'medium') {
-        setArticles(json.items.slice(0, sanitizedConfig.blog.limit));
-      } else if (sanitizedConfig.blog.source === 'dev') {
-        setArticles(json.slice(0, sanitizedConfig.blog.limit));
-      }
+      setMediumArticles(
+        json.items.slice(0, sanitizedConfig.blog.medium.limit),
+      );
     } catch (error) {
       //
     } finally {
-      setArticlesLoading(false);
+      setMediumArticlesLoading(false);
     }
   }, [
-    sanitizedConfig.blog.source,
-    sanitizedConfig.blog.username,
-    sanitizedConfig.blog.limit,
+    sanitizedConfig.blog.medium.username,
+    sanitizedConfig.blog.medium.limit,
+    sanitizedConfig.blog.medium.mode,
+  ]);
+
+  const fetchDevToArticles = useCallback(async () => {
+    if (
+      !sanitizedConfig.blog.dev.username ||
+      sanitizedConfig.blog.dev.mode === 'disabled'
+    ) {
+      return;
+    }
+
+    setDevToArticlesLoading(true);
+
+    try {
+      const res = await fetch(
+        `https://dev.to/api/articles?username=${sanitizedConfig.blog.dev.username}`,
+      );
+      const json = await res.json();
+
+      if (res.status !== 200) {
+        return;
+      }
+
+      setDevToArticles(json.slice(0, sanitizedConfig.blog.dev.limit));
+    } catch (error) {
+      //
+    } finally {
+      setDevToArticlesLoading(false);
+    }
+  }, [
+    sanitizedConfig.blog.dev.username,
+    sanitizedConfig.blog.dev.limit,
+    sanitizedConfig.blog.dev.mode,
   ]);
 
   useEffect(() => {
-    fetchProfile();
     fetchGithubProjects();
-    fetchArticles();
-  }, [fetchProfile, fetchGithubProjects, fetchArticles]);
+    fetchMediumArticles();
+    fetchDevToArticles();
+  }, [fetchGithubProjects, fetchMediumArticles, fetchDevToArticles]);
+
+  const name = profile?.name || DEFAULT_PROFILE.name;
 
   if (error) {
     return (
@@ -183,6 +189,7 @@ const GitProfile = ({ config }: Props) => {
         className={`p-4 lg:p-10 min-h-screen ${
           loading || error ? 'flex justify-center items-center' : ''
         }`}
+        style={fontStyle}
       >
         {loading ? (
           <div className="w-full">
@@ -191,8 +198,8 @@ const GitProfile = ({ config }: Props) => {
                 <div className="col-span-1">
                   <div className="card-base">
                     {skeleton({
-                      widthCls: 'w-full',
-                      heightCls: 'h-80',
+                      width: 'w-full',
+                      height: 'h-80',
                       className: 'mx-auto',
                     })}
                   </div>
@@ -200,8 +207,8 @@ const GitProfile = ({ config }: Props) => {
                 <div className="col-span-2">
                   <div className="card-base h-full">
                     {skeleton({
-                      widthCls: 'w-full',
-                      heightCls: 'h-full',
+                      width: 'w-full',
+                      height: 'h-full',
                       className: 'mx-auto',
                     })}
                   </div>
@@ -215,15 +222,19 @@ const GitProfile = ({ config }: Props) => {
               <AvatarCard
                 profile={profile || DEFAULT_PROFILE}
                 loading={loading}
-                avatarRing={sanitizedConfig.themeConfig.avatarRing}
+                setAvatar={setAvatar}
+                config={sanitizedConfig}
               />
               <DetailsCard
                 profile={profile || DEFAULT_PROFILE}
                 loading={loading}
-                github={sanitizedConfig.github.username}
-                social={sanitizedConfig.social}
+                config={sanitizedConfig}
               />
-              <SkillCard skills={sanitizedConfig.skills} loading={loading} />
+              <SkillCard
+                skills={sanitizedConfig.skills}
+                loading={loading}
+                colors={colors}
+              />
               <ExperienceCard
                 experiences={sanitizedConfig.experiences}
                 loading={loading}
@@ -242,39 +253,26 @@ const GitProfile = ({ config }: Props) => {
               />
             </div>
             <div className="col-span-1 lg:col-span-2">
-              {/* External Projects */}
-              {sanitizedConfig.projects.external.display && (
+              {sanitizedConfig.externalProjects.length > 0 && (
                 <div className="card-base">
-                  <div className="text-xl font-bold">
-                    {sanitizedConfig.projects.external.header}
-                  </div>
+                  <div className="text-xl font-bold">Projects</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {sanitizedConfig.projects.external.projects.map(
-                      (project, index) => (
-                        <ExternalProjectCard
-                          key={index}
-                          project={project}
-                          loading={loading}
-                          onClick={handleProjectClick}
-                        />
-                      ),
-                    )}
+                    {sanitizedConfig.externalProjects.map((project, index) => (
+                      <ExternalProjectCard
+                        key={index}
+                        project={project}
+                        loading={loading}
+                      />
+                    ))}
                   </div>
                 </div>
               )}
-              {/* Github Projects */}
-              {sanitizedConfig.projects.github.display && (
+              {sanitizedConfig.projects.github.mode !== 'disabled' && (
                 <div className="card-base mt-6">
-                  <div className="text-xl font-bold">
-                    {sanitizedConfig.projects.github.header}
-                  </div>
+                  <div className="text-xl font-bold">GitHub Projects</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     {githubProjectsLoading
-                      ? [
-                          ...Array(
-                            sanitizedConfig.projects.github.automatic.limit,
-                          ).keys(),
-                        ].map((_, index) => (
+                      ? SKELETON_STYLES.map((_, index) => (
                           <GithubProjectCard
                             key={index}
                             project={null}
@@ -292,22 +290,33 @@ const GitProfile = ({ config }: Props) => {
                   </div>
                 </div>
               )}
-              {/* Blog */}
-              {sanitizedConfig.blog.display && (
+              {sanitizedConfig.blog.medium.mode !== 'disabled' && (
                 <div className="card-base mt-6">
-                  <div className="text-xl font-bold">Blog</div>
+                  <div className="text-xl font-bold">Medium</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {articlesLoading
-                      ? [...Array(sanitizedConfig.blog.limit).keys()].map(
-                          (_, index) => (
-                            <BlogCard
-                              key={index}
-                              article={null}
-                              loading={true}
-                            />
-                          ),
-                        )
-                      : articles.map((article, index) => (
+                    {mediumArticlesLoading
+                      ? SKELETON_STYLES.map((_, index) => (
+                          <BlogCard key={index} article={null} loading={true} />
+                        ))
+                      : mediumArticles.map((article, index) => (
+                          <BlogCard
+                            key={index}
+                            article={article}
+                            loading={false}
+                          />
+                        ))}
+                  </div>
+                </div>
+              )}
+              {sanitizedConfig.blog.dev.mode !== 'disabled' && (
+                <div className="card-base mt-6">
+                  <div className="text-xl font-bold">Dev.to</div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {devToArticlesLoading
+                      ? SKELETON_STYLES.map((_, index) => (
+                          <BlogCard key={index} article={null} loading={true} />
+                        ))
+                      : devToArticles.map((article, index) => (
                           <BlogCard
                             key={index}
                             article={article}
@@ -327,13 +336,10 @@ const GitProfile = ({ config }: Props) => {
         loading={loading}
         themeConfig={sanitizedConfig.themeConfig}
       />
-      <Footer loading={loading} content={sanitizedConfig.footer} />
-      {/* Modal'ı sayfanın sonunda render ediyoruz */}
-      <Modal
-        isOpen={!!selectedProject}
-        onClose={handleCloseModal}
-        url={selectedProject?.link || ''}
-        title={selectedProject?.title || ''}
+      <Footer
+        loading={loading}
+        name={name}
+        github={sanitizedConfig.social.github}
       />
     </Fragment>
   );
