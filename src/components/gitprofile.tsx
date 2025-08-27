@@ -1,5 +1,4 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { SKELETON_STYLES } from '../constants';
 import { getInitialTheme, getSanitizedConfig, skeleton } from '../utils';
 import {
   SanitizedConfig,
@@ -20,9 +19,9 @@ import Footer from './footer';
 import ErrorPage from './error-page';
 import ThemeChanger from './theme-changer';
 import colors from '../data/colors.json';
-import Modal from './modal'; // Oluşturduğumuz Modal bileşenini import ediyoruz
-import { DEFAULT_PROFILE } from '../constants/default-profile';
-import { Config } from '../../global';
+import Modal from './modal';
+import { DEFAULT_PROFILE } from '../constants';
+import { Config } from '../../gitprofile.config';
 
 type Props = {
   config: Config;
@@ -32,7 +31,9 @@ const GitProfile = ({ config }: Props) => {
   const [sanitizedConfig] = useState<SanitizedConfig>(
     getSanitizedConfig(config),
   );
-  const [theme, setTheme] = useState<string>(getInitialTheme());
+  const [theme, setTheme] = useState<string>(() =>
+    getInitialTheme(sanitizedConfig.themeConfig),
+  );
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>(null);
@@ -251,9 +252,21 @@ const GitProfile = ({ config }: Props) => {
         ) : (
           <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="col-span-1">
-              <AvatarCard profile={profile || DEFAULT_PROFILE} loading={loading} />
-              <DetailsCard profile={profile || DEFAULT_PROFILE} loading={loading} />
-              <SkillCard skills={sanitizedConfig.skills} loading={loading} />
+              <AvatarCard
+                profile={profile || DEFAULT_PROFILE}
+                loading={loading}
+                config={sanitizedConfig}
+              />
+              <DetailsCard
+                profile={profile || DEFAULT_PROFILE}
+                loading={loading}
+                config={sanitizedConfig}
+              />
+              <SkillCard
+                skills={sanitizedConfig.skills}
+                loading={loading}
+                colors={colors}
+              />
               <ExperienceCard
                 experiences={sanitizedConfig.experiences}
                 loading={loading}
@@ -294,15 +307,15 @@ const GitProfile = ({ config }: Props) => {
                   <div className="text-xl font-bold">GitHub Projeleri</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     {githubProjectsLoading
-                      ? [...Array(sanitizedConfig.projects.github.limit).keys()].map(
-                          (_, index) => (
-                            <GithubProjectCard
-                              key={index}
-                              project={null}
-                              loading={true}
-                            />
-                          ),
-                        )
+                      ? [
+                          ...Array(sanitizedConfig.projects.github.limit).keys(),
+                        ].map((_, index) => (
+                          <GithubProjectCard
+                            key={index}
+                            project={null}
+                            loading={true}
+                          />
+                        ))
                       : githubProjects.map((project, index) => (
                           <GithubProjectCard
                             key={index}
@@ -320,15 +333,15 @@ const GitProfile = ({ config }: Props) => {
                   <div className="text-xl font-bold">Medium</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                     {mediumArticlesLoading
-                      ? [...Array(sanitizedConfig.blog.medium.limit).keys()].map(
-                          (_, index) => (
-                            <BlogCard
-                              key={index}
-                              article={null}
-                              loading={true}
-                            />
-                          ),
-                        )
+                      ? [
+                          ...Array(sanitizedConfig.blog.medium.limit).keys(),
+                        ].map((_, index) => (
+                          <BlogCard
+                            key={index}
+                            article={null}
+                            loading={true}
+                          />
+                        ))
                       : mediumArticles.map((article, index) => (
                           <BlogCard
                             key={index}
@@ -373,7 +386,11 @@ const GitProfile = ({ config }: Props) => {
         loading={loading}
         themeConfig={sanitizedConfig.themeConfig}
       />
-      <Footer loading={loading} />
+      <Footer
+        loading={loading}
+        name={name}
+        github={sanitizedConfig.social.github}
+      />
       {/* Modal'ı sayfanın sonunda render ediyoruz */}
       <Modal
         isOpen={!!selectedProject}
