@@ -36,14 +36,14 @@ const CONFIG = {
         {      
       title: 'Büyüme Persentil Hesaplayıcı',
       description: '',
-      imageUrl: 'https://img.icons8.com/dotty/80/person-growth.png',
+      imageUrl: 'public/icons8-personal-growth-50.png',
       link: 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/',
       technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
     },
         {
           title: 'Micronutrient Dietary Reference Values',
           description: '',
-          imageUrl: 'https://img.icons8.com/external-flatart-icons-flat-flatarticons/64/external-vitamin-diet-and-nutrition-flatart-icons-flat-flatarticons.png',
+          imageUrl: 'public/icons8-vitamin-64.png',
           link: 'https://onurdersan.github.io/micronutrients/',
         },
       ],
