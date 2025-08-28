@@ -1,347 +1,299 @@
+import { useCallback, useEffect, useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import { formatDistance } from 'date-fns';
 import {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import {
-  DEFAULT_THEMES,
-  DEFAULT_PROFILE,
-  DEFAULT_CONFIG,
-  SKELETON_STYLES,
-} from '../constants';
-import { getInitialTheme, getSanitizedConfig, skeleton } from '../utils';
+  CustomError,
+  GENERIC_ERROR,
+  INVALID_CONFIG_ERROR,
+  INVALID_GITHUB_USERNAME_ERROR,
+  setTooManyRequestError,
+} from '../constants/errors';
+import '../assets/index.css';
+import { getInitialTheme, getSanitizedConfig, setupHotjar } from '../utils';
 import { SanitizedConfig } from '../interfaces/sanitized-config';
-import { Profile } from '../interfaces/profile';
+import ErrorPage from './error-page';
+import { DEFAULT_THEMES } from '../constants/default-themes';
+import ThemeChanger from './theme-changer';
+import { BG_COLOR } from '../constants';
 import AvatarCard from './avatar-card';
+import { Profile } from '../interfaces/profile';
 import DetailsCard from './details-card';
 import SkillCard from './skill-card';
 import ExperienceCard from './experience-card';
 import EducationCard from './education-card';
-import PublicationCard from './publication-card';
 import CertificationCard from './certification-card';
+import { GithubProject } from '../interfaces/github-project';
+import GithubProjectCard from './github-project-card';
 import ExternalProjectCard from './external-project-card';
 import BlogCard from './blog-card';
-import GithubProjectCard from './github-project-card';
 import Footer from './footer';
-import ErrorPage from './error-page';
-import ThemeChanger from './theme-changer';
-import colors from '../data/colors.json';
+import PublicationCard from './publication-card';
+import WebsitesCard from './websites-card';
 
-type Props = {
-  config: Record<string, any>;
-  profile: Profile | null;
-  loading: boolean;
-  error: any;
-};
-
-const GitProfile = ({ config, profile, loading, error }: Props) => {
-  const [sanitizedConfig] = useState<SanitizedConfig>(
+/**
+ * Renders the GitProfile component.
+ *
+ * @param {Object} config - the configuration object
+ * @return {JSX.Element} the rendered GitProfile component
+ */
+const GitProfile = ({ config }: { config: Config }) => {
+  const [sanitizedConfig] = useState<SanitizedConfig | Record<string, never>>(
     getSanitizedConfig(config),
   );
-  const [theme, setTheme] = useState<string>(getInitialTheme());
-  const [_, setAvatar] = useState<string | null>(null);
-  const [githubProjects, setGithubProjects] = useState<any[]>([]);
-  const [githubProjectsLoading, setGithubProjectsLoading] =
-    useState<boolean>(false);
-  const [mediumArticles, setMediumArticles] = useState<any[]>([]);
-  const [mediumArticlesLoading, setMediumArticlesLoading] =
-    useState<boolean>(false);
-  const [devToArticles, setDevToArticles] = useState<any[]>([]);
-  const [devToArticlesLoading, setDevToArticlesLoading] =
-    useState<boolean>(false);
+  const [theme, setTheme] = useState<string>(DEFAULT_THEMES[0]);
+  const [error, setError] = useState<CustomError | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [githubProjects, setGithubProjects] = useState<GithubProject[]>([]);
+
+  const getGithubProjects = useCallback(
+    async (publicRepoCount: number): Promise<GithubProject[]> => {
+      if (sanitizedConfig.projects.github.mode === 'automatic') {
+        if (publicRepoCount === 0) {
+          return [];
+        }
+
+        const excludeRepo =
+          sanitizedConfig.projects.github.automatic.exclude.projects
+            .map((project) => `+-repo:${project}`)
+            .join('');
+
+        const query = `user:${sanitizedConfig.github.username}+fork:${!sanitizedConfig.projects.github.automatic.exclude.forks}${excludeRepo}`;
+        const url = `https://api.github.com/search/repositories?q=${query}&sort=${sanitizedConfig.projects.github.automatic.sortBy}&per_page=${sanitizedConfig.projects.github.automatic.limit}&type=Repositories`;
+
+        const repoResponse = await axios.get(url, {
+          headers: { 'Content-Type': 'application/vnd.github.v3+json' },
+        });
+        const repoData = repoResponse.data;
+
+        return repoData.items;
+      } else {
+        if (sanitizedConfig.projects.github.manual.projects.length === 0) {
+          return [];
+        }
+        const repos = sanitizedConfig.projects.github.manual.projects
+          .map((project) => `+repo:${project}`)
+          .join('');
+
+        const url = `https://api.github.com/search/repositories?q=${repos}+fork:true&type=Repositories`;
+
+        const repoResponse = await axios.get(url, {
+          headers: { 'Content-Type': 'application/vnd.github.v3+json' },
+        });
+        const repoData = repoResponse.data;
+
+        return repoData.items;
+      }
+    },
+    [
+      sanitizedConfig.github.username,
+      sanitizedConfig.projects.github.mode,
+      sanitizedConfig.projects.github.manual.projects,
+      sanitizedConfig.projects.github.automatic.sortBy,
+      sanitizedConfig.projects.github.automatic.limit,
+      sanitizedConfig.projects.github.automatic.exclude.forks,
+      sanitizedConfig.projects.github.automatic.exclude.projects,
+    ],
+  );
+
+  const loadData = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        `https://api.github.com/users/${sanitizedConfig.github.username}`,
+      );
+      const data = response.data;
+
+      setProfile({
+        avatar: data.avatar_url,
+        name: data.name || ' ',
+        bio: data.bio || '',
+        location: data.location || '',
+        company: data.company || '',
+      });
+
+      if (!sanitizedConfig.projects.github.display) {
+        return;
+      }
+
+      setGithubProjects(await getGithubProjects(data.public_repos));
+    } catch (error) {
+      handleError(error as AxiosError | Error);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    sanitizedConfig.github.username,
+    sanitizedConfig.projects.github.display,
+    getGithubProjects,
+  ]);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    if (Object.keys(sanitizedConfig).length === 0) {
+      setError(INVALID_CONFIG_ERROR);
+    } else {
+      setError(null);
+      setTheme(getInitialTheme(sanitizedConfig.themeConfig));
+      setupHotjar(sanitizedConfig.hotjar);
+      loadData();
+    }
+  }, [sanitizedConfig, loadData]);
+
+  useEffect(() => {
+    theme && document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const fontStyle = useMemo(() => {
-    return sanitizedConfig.font
-      ? {
-          fontFamily: sanitizedConfig.font,
+  const handleError = (error: AxiosError | Error): void => {
+    console.error('Error:', error);
+
+    if (error instanceof AxiosError) {
+      try {
+        const reset = formatDistance(
+          new Date(error.response?.headers?.['x-ratelimit-reset'] * 1000),
+          new Date(),
+          { addSuffix: true },
+        );
+
+        if (typeof error.response?.status === 'number') {
+          switch (error.response.status) {
+            case 403:
+              setError(setTooManyRequestError(reset));
+              break;
+            case 404:
+              setError(INVALID_GITHUB_USERNAME_ERROR);
+              break;
+            default:
+              setError(GENERIC_ERROR);
+              break;
+          }
+        } else {
+          setError(GENERIC_ERROR);
         }
-      : {};
-  }, [sanitizedConfig.font]);
-
-  const fetchGithubProjects = useCallback(async () => {
-    if (
-      !sanitizedConfig.projects.github.username ||
-      sanitizedConfig.projects.github.mode === 'disabled'
-    ) {
-      return;
-    }
-
-    setGithubProjectsLoading(true);
-
-    try {
-      const res = await fetch(
-        `https://api.github.com/users/${sanitizedConfig.projects.github.username}/repos?sort=${sanitizedConfig.projects.github.sortBy}&direction=${sanitizedConfig.projects.github.orderBy}&per_page=${sanitizedConfig.projects.github.limit}`,
-      );
-      const json = await res.json();
-
-      if (res.status !== 200) {
-        return;
+      } catch (innerError) {
+        setError(GENERIC_ERROR);
       }
-
-      setGithubProjects(json);
-    } catch (error) {
-      //
-    } finally {
-      setGithubProjectsLoading(false);
+    } else {
+      setError(GENERIC_ERROR);
     }
-  }, [
-    sanitizedConfig.projects.github.username,
-    sanitizedConfig.projects.github.sortBy,
-    sanitizedConfig.projects.github.orderBy,
-    sanitizedConfig.projects.github.limit,
-    sanitizedConfig.projects.github.mode,
-  ]);
-
-  const fetchMediumArticles = useCallback(async () => {
-    if (
-      !sanitizedConfig.blog.medium.username ||
-      sanitizedConfig.blog.medium.mode === 'disabled'
-    ) {
-      return;
-    }
-
-    setMediumArticlesLoading(true);
-
-    try {
-      const res = await fetch(
-        `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${sanitizedConfig.blog.medium.username}`,
-      );
-      const json = await res.json();
-
-      if (res.status !== 200) {
-        return;
-      }
-
-      setMediumArticles(
-        json.items.slice(0, sanitizedConfig.blog.medium.limit),
-      );
-    } catch (error) {
-      //
-    } finally {
-      setMediumArticlesLoading(false);
-    }
-  }, [
-    sanitizedConfig.blog.medium.username,
-    sanitizedConfig.blog.medium.limit,
-    sanitizedConfig.blog.medium.mode,
-  ]);
-
-  const fetchDevToArticles = useCallback(async () => {
-    if (
-      !sanitizedConfig.blog.dev.username ||
-      sanitizedConfig.blog.dev.mode === 'disabled'
-    ) {
-      return;
-    }
-
-    setDevToArticlesLoading(true);
-
-    try {
-      const res = await fetch(
-        `https://dev.to/api/articles?username=${sanitizedConfig.blog.dev.username}`,
-      );
-      const json = await res.json();
-
-      if (res.status !== 200) {
-        return;
-      }
-
-      setDevToArticles(json.slice(0, sanitizedConfig.blog.dev.limit));
-    } catch (error) {
-      //
-    } finally {
-      setDevToArticlesLoading(false);
-    }
-  }, [
-    sanitizedConfig.blog.dev.username,
-    sanitizedConfig.blog.dev.limit,
-    sanitizedConfig.blog.dev.mode,
-  ]);
-
-  useEffect(() => {
-    fetchGithubProjects();
-    fetchMediumArticles();
-    fetchDevToArticles();
-  }, [fetchGithubProjects, fetchMediumArticles, fetchDevToArticles]);
-
-  const name = profile?.name || DEFAULT_PROFILE.name;
-
-  if (error) {
-    return (
-      <ErrorPage
-        status={error.status}
-        title={error.title}
-        subTitle={error.subTitle}
-      />
-    );
-  }
+  };
 
   return (
-    <Fragment>
-      <div
-        className={`p-4 lg:p-10 min-h-screen ${
-          loading || error ? 'flex justify-center items-center' : ''
-        }`}
-        style={fontStyle}
-      >
-        {loading ? (
-          <div className="w-full">
-            <div className="flex justify-center items-center">
-              <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="col-span-1">
-                  <div className="card-base">
-                    {skeleton({
-                      width: 'w-full',
-                      height: 'h-80',
-                      className: 'mx-auto',
-                    })}
-                  </div>
+    <div className="fade-in h-screen">
+      {error ? (
+        <ErrorPage
+          status={error.status}
+          title={error.title}
+          subTitle={error.subTitle}
+        />
+      ) : (
+        <>
+          <div className={`p-4 lg:p-10 min-h-full ${BG_COLOR}`}>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 rounded-box">
+              <div className="col-span-1">
+                <div className="grid grid-cols-1 gap-6">
+                  {!sanitizedConfig.themeConfig.disableSwitch && (
+                    <ThemeChanger
+                      theme={theme}
+                      setTheme={setTheme}
+                      loading={loading}
+                      themeConfig={sanitizedConfig.themeConfig}
+                    />
+                  )}
+                  <AvatarCard
+                    profile={profile}
+                    loading={loading}
+                    avatarRing={sanitizedConfig.themeConfig.displayAvatarRing}
+                    resumeFileUrl={sanitizedConfig.resume.fileUrl}
+                  />
+                  <DetailsCard
+                    profile={profile}
+                    loading={loading}
+                    github={sanitizedConfig.github}
+                    social={sanitizedConfig.social}
+                  />
+                  {sanitizedConfig.skills.length !== 0 && (
+                    <SkillCard
+                      loading={loading}
+                      skills={sanitizedConfig.skills}
+                    />
+                  )}
+                  {sanitizedConfig.experiences.length !== 0 && (
+                    <ExperienceCard
+                      loading={loading}
+                      experiences={sanitizedConfig.experiences}
+                    />
+                  )}
+                  {sanitizedConfig.certifications.length !== 0 && (
+                    <CertificationCard
+                      loading={loading}
+                      certifications={sanitizedConfig.certifications}
+                    />
+                  )}
+                  {sanitizedConfig.educations.length !== 0 && (
+                    <EducationCard
+                      loading={loading}
+                      educations={sanitizedConfig.educations}
+                    />
+                  )}
                 </div>
-                <div className="col-span-2">
-                  <div className="card-base h-full">
-                    {skeleton({
-                      width: 'w-full',
-                      height: 'h-full',
-                      className: 'mx-auto',
-                    })}
-                  </div>
+              </div>
+              <div className="lg:col-span-2 col-span-1">
+                <div className="grid grid-cols-1 gap-6">
+                  {sanitizedConfig.projects.github.display && (
+                    <GithubProjectCard
+                      header={sanitizedConfig.projects.github.header}
+                      limit={sanitizedConfig.projects.github.automatic.limit}
+                      githubProjects={githubProjects}
+                      loading={loading}
+                      googleAnalyticsId={sanitizedConfig.googleAnalytics.id}
+                    />
+                  )}
+                  {sanitizedConfig.publications.length !== 0 && (
+                    <PublicationCard
+                      loading={loading}
+                      publications={sanitizedConfig.publications}
+                    />
+                  )}
+                  {sanitizedConfig.projects.external.projects.length !== 0 && (
+                    <ExternalProjectCard
+                      loading={loading}
+                      header={sanitizedConfig.projects.external.header}
+                      externalProjects={
+                        sanitizedConfig.projects.external.projects
+                      }
+                      googleAnalyticId={sanitizedConfig.googleAnalytics.id}
+                    />
+                  )}
+                  {sanitizedConfig.blog.display && (
+                    <BlogCard
+                      loading={loading}
+                      googleAnalyticsId={sanitizedConfig.googleAnalytics.id}
+                      blog={sanitizedConfig.blog}
+                    />
+                  )}
+                  {sanitizedConfig.websites.length > 0 && (
+                    <WebsitesCard
+                        loading={loading}
+                        websites={sanitizedConfig.websites}
+                    />
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="col-span-1">
-              <AvatarCard
-                profile={profile || DEFAULT_PROFILE}
-                loading={loading}
-                setAvatar={setAvatar}
-                config={sanitizedConfig}
-              />
-              <DetailsCard
-                profile={profile || DEFAULT_PROFILE}
-                loading={loading}
-                config={sanitizedConfig}
-              />
-              <SkillCard
-                skills={sanitizedConfig.skills}
-                loading={loading}
-                colors={colors}
-              />
-              <ExperienceCard
-                experiences={sanitizedConfig.experiences}
-                loading={loading}
-              />
-              <EducationCard
-                educations={sanitizedConfig.educations}
-                loading={loading}
-              />
-              <PublicationCard
-                publications={sanitizedConfig.publications}
-                loading={loading}
-              />
-              <CertificationCard
-                certifications={sanitizedConfig.certifications}
-                loading={loading}
-              />
-            </div>
-            <div className="col-span-1 lg:col-span-2">
-              {sanitizedConfig.externalProjects.length > 0 && (
-                <div className="card-base">
-                  <div className="text-xl font-bold">Projects</div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {sanitizedConfig.externalProjects.map((project, index) => (
-                      <ExternalProjectCard
-                        key={index}
-                        project={project}
-                        loading={loading}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-              {sanitizedConfig.projects.github.mode !== 'disabled' && (
-                <div className="card-base mt-6">
-                  <div className="text-xl font-bold">GitHub Projects</div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {githubProjectsLoading
-                      ? SKELETON_STYLES.map((_, index) => (
-                          <GithubProjectCard
-                            key={index}
-                            project={null}
-                            loading={true}
-                          />
-                        ))
-                      : githubProjects.map((project, index) => (
-                          <GithubProjectCard
-                            key={index}
-                            project={project}
-                            loading={false}
-                            config={sanitizedConfig.projects.github}
-                          />
-                        ))}
-                  </div>
-                </div>
-              )}
-              {sanitizedConfig.blog.medium.mode !== 'disabled' && (
-                <div className="card-base mt-6">
-                  <div className="text-xl font-bold">Medium</div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {mediumArticlesLoading
-                      ? SKELETON_STYLES.map((_, index) => (
-                          <BlogCard key={index} article={null} loading={true} />
-                        ))
-                      : mediumArticles.map((article, index) => (
-                          <BlogCard
-                            key={index}
-                            article={article}
-                            loading={false}
-                          />
-                        ))}
-                  </div>
-                </div>
-              )}
-              {sanitizedConfig.blog.dev.mode !== 'disabled' && (
-                <div className="card-base mt-6">
-                  <div className="text-xl font-bold">Dev.to</div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    {devToArticlesLoading
-                      ? SKELETON_STYLES.map((_, index) => (
-                          <BlogCard key={index} article={null} loading={true} />
-                        ))
-                      : devToArticles.map((article, index) => (
-                          <BlogCard
-                            key={index}
-                            article={article}
-                            loading={false}
-                          />
-                        ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-      <ThemeChanger
-        theme={theme}
-        setTheme={setTheme}
-        loading={loading}
-        themeConfig={sanitizedConfig.themeConfig}
-      />
-      <Footer
-        loading={loading}
-        name={name}
-        github={sanitizedConfig.social.github}
-      />
-    </Fragment>
+          {sanitizedConfig.footer && (
+            <footer
+              className={`p-4 footer ${BG_COLOR} text-base-content footer-center`}
+            >
+              <div className="card card-sm bg-base-100 shadow-sm">
+                <Footer content={sanitizedConfig.footer} loading={loading} />
+              </div>
+            </footer>
+          )}
+        </>
+      )}
+    </div>
   );
 };
 
