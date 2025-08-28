@@ -36,14 +36,14 @@ const CONFIG = {
         {      
       title: 'Büyüme Persentil Hesaplayıcı',
       description: '',
-      imageUrl: 'https://img.icons8.com/fluency/100/calculator.png',
+      imageUrl: 'https://img.icons8.com/dotty/80/person-growth.png',
       link: 'https://68a763090451e6009f24010f--extraordinary-griffin-5e9625.netlify.app/',
       technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
     },
         {
           title: 'Micronutrient Dietary Reference Values',
           description: 'Comparison of Food and Nutrition Board (FNB), European Food Safety Authority (EFSA), and Turkish Food Codex (TFC) data.',
-          imageUrl: 'https://img.icons8.com/?size=192&id=IoopC0XEQBUb&format=png',
+          imageUrl: 'https://img.icons8.com/external-flatart-icons-flat-flatarticons/64/external-vitamin-diet-and-nutrition-flatart-icons-flat-flatarticons.png',
           link: 'https://onurdersan.github.io/micronutrients/',
         },
       ],
