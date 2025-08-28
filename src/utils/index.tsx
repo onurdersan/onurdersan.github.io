@@ -52,7 +52,7 @@ export const getSanitizedConfig = (
           },
         },
         external: {
-          header: config?.projects?.external?.header || 'My Projects',
+          header: config?.projects?.external?.header || 'Projects',
           projects: config?.projects?.external?.projects || [],
         },
       },
