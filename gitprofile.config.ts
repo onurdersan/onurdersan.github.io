@@ -42,7 +42,7 @@ const CONFIG = {
     },
         {
           title: 'Micronutrient Dietary Reference Values',
-          description: 'Comparison of Food and Nutrition Board (FNB), European Food Safety Authority (EFSA), and Turkish Food Codex (TFC) data.',
+          description: '',
           imageUrl: 'https://img.icons8.com/external-flatart-icons-flat-flatarticons/64/external-vitamin-diet-and-nutrition-flatart-icons-flat-flatarticons.png',
           link: 'https://onurdersan.github.io/micronutrients/',
         },
