@@ -117,7 +117,7 @@ const CONFIG = {
       companyLink: 'https://tepecikeah.saglik.gov.tr/',
     },
     {
-      company: 'Dr. Behçet Uz Children's Hospital',
+      company: "Dr. Behçet Uz Children's Hospital",
       position: 'Pediatrician',
       from: '2023',
       to: '2024',
