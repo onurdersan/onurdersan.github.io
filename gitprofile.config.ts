@@ -139,8 +139,35 @@ const CONFIG = {
       body: '',
       year: '',
     },
+        {
+      name: 'Applied Project Writing Training (in the Field of Science and Health Sciences)',
+      body: '',
+      year: '',
+    },
+            {
+      name: 'Power Analysis in Health Sciences with the GPower Program',
+      body: '',
+      year: '',
+    },
+            {
+      name: 'Mixed Research Method Training',
+      body: '',
+      year: '',
+    },
+            {
+      name: 'TÜBİTAK Project Writing (For Social Sciences)',
+      body: '',
+      year: '',
+    },
+            {
+      name: 'TÜBİTAK - ARDEB, 1001-1002-3501 Project Writing (For Life Sciences)',
+      body: '',
+      year: '',
+    },
+
+    
     {
-    name: 'BTK Akademi',
+    name: 'BTK Academy',
     body: `a. Project Management Fundamentals
           b. Project and Risk Management
           c. Algorithm Design
@@ -151,6 +178,13 @@ const CONFIG = {
           h. Deep Learning
           i. Natural Language Processing
           j. Reinforcement Learning`,
+    year: '',
+    },
+        {
+    name: 'T3 Academy, Turkish Technology Team',
+    body: `a. Artificial Intelligence (ongoing)
+          b. Entrepreneur Training Program (ongoing)
+          c. Project Development Training (ongoing)`,
     year: '',
     },
   ],
