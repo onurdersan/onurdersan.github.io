@@ -113,37 +113,31 @@ const CONFIG = {
       name: 'ICH Good Clinical Practice',
       body: '',
       year: '',
-      link: '',
     },
       {
       name: 'Good Clinical Practice Training for Social and Behavioral Research',
       body: '',
       year: '',
-      link: '',
     },
         {
       name: 'Scale Development and Adaptation Training',
       body: '',
       year: '',
-      link: '',
     },
         {
       name: 'Medical Research Methods',
       body: '',
       year: '',
-      link: '',
     },
         {
       name: 'Research Ethics',
       body: '',
       year: '',
-      link: '',
     },
         {
       name: 'Bibliometric Analysis',
       body: '',
       year: '',
-      link: '',
     },
     {
     name: 'BTK Akademi',
@@ -158,7 +152,6 @@ const CONFIG = {
           i. Natural Language Processing
           j. Reinforcement Learning`,
     year: '',
-    link: '',
     },
   ],
   educations: [
