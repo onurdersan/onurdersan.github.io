@@ -87,6 +87,20 @@ const CONFIG = {
     'Flutter',
     'Git',
   ],
+    educations: [
+    {
+      institution: 'S.B.Ü. Dr. Behçet Uz Çocuk Hastalıkları ve Cerrahisi E.A.H.',
+      degree: 'Pediatric Specialist',
+      from: '2016',
+      to: '2020',
+    },
+    {
+      institution: 'Dokuz Eylül Üniversitesi Tıp Fakültesi',
+      degree: 'MD',
+      from: '2008',
+      to: '2015',
+    },
+  ],
   experiences: [
     {
       company: 'S.B.Ü. İzmir Tepecik Eğitim ve Araştırma Hastanesi',
@@ -188,20 +202,7 @@ const CONFIG = {
     year: '',
     },
   ],
-  educations: [
-    {
-      institution: 'S.B.Ü. Dr. Behçet Uz Çocuk Hastalıkları ve Cerrahisi E.A.H.',
-      degree: 'Pediatric Specialist',
-      from: '2016',
-      to: '2020',
-    },
-    {
-      institution: 'Dokuz Eylül Üniversitesi Tıp Fakültesi',
-      degree: 'MD',
-      from: '2008',
-      to: '2015',
-    },
-  ],
+
   publications: [
     {
       title: 'Pediatrics 4.0: the Transformative Impacts of the Latest Industrial Revolution on Pediatrics',
