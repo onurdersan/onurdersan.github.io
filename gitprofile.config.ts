@@ -96,7 +96,7 @@ const CONFIG = {
     },   
       
       {
-      institution: 'University of Health Sciences Dr. Behçet Uz Children's Hospital',
+      institution: "University of Health Sciences Dr. Behçet Uz Children's Hospital",
       degree: 'Pediatric Residency',
       from: '2016',
       to: '2020',
