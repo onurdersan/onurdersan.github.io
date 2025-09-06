@@ -88,29 +88,36 @@ const CONFIG = {
     'Git',
   ],
     educations: [
-    {
-      institution: 'S.B.Ü. Dr. Behçet Uz Çocuk Hastalıkları ve Cerrahisi E.A.H.',
-      degree: 'Pediatric Specialist',
+       {
+      institution: 'İstanbul University',
+      degree: 'Child Development',
+      from: '2021',
+      to: 'on going',
+    },   
+      
+      {
+      institution: 'University of Health Sciences Dr. Behçet Uz Children's Hospital',
+      degree: 'Pediatric Residency',
       from: '2016',
       to: '2020',
     },
     {
-      institution: 'Dokuz Eylül Üniversitesi Tıp Fakültesi',
-      degree: 'MD',
+      institution: 'Dokuz Eylül University, Faculty of Medicine',
+      degree: 'Medical Doctor',
       from: '2008',
       to: '2015',
     },
   ],
   experiences: [
     {
-      company: 'S.B.Ü. İzmir Tepecik Eğitim ve Araştırma Hastanesi',
+      company: 'Izmir Tepecik Training and Research Hospital',
       position: 'Pediatrician',
       from: 'February 2023',
       to: 'Present',
       companyLink: 'https://tepecikeah.saglik.gov.tr/',
     },
     {
-      company: 'S.B.Ü. Dr. Behçet Uz Çocuk Hastalıkları ve Cerrahisi E.A.H.',
+      company: 'Dr. Behçet Uz Children's Hospital',
       position: 'Pediatrician',
       from: '2023',
       to: '2024',
