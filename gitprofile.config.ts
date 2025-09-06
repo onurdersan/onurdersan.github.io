@@ -54,7 +54,7 @@ const CONFIG = {
     linkedin: 'dersanonur',
     x: 'dersanonur',
     mastodon: '',
-    researchGate: 'Dersan-Onur',
+    researchGate: 'dersan-onur',
     facebook: '',
     instagram: 'dersanonur',
     reddit: '',
