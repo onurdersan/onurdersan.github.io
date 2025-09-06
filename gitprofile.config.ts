@@ -108,7 +108,6 @@ const CONFIG = {
       name: 'Good Medical Researcher',
       body: '',
       year: '',
-      link: '',
     },
     {
       name: 'ICH Good Clinical Practice',
