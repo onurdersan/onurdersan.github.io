@@ -80,7 +80,7 @@ const CertificationCard = ({
                     year={certification.year}
                     name={certification.name}
                     body={certification.body}
-                    link={certification.link}
+                    
                   />
                 ))}
               </>
