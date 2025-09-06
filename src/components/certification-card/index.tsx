@@ -20,7 +20,7 @@ const ListItem = ({
     <div className="font-medium">
         {name}
     </div>
-    <h3 className="mb-4 font-normal">{body}</h3>
+    <h3 className="mb-4 font-normal whitespace-pre-line">{body}</h3>
   </li>
 );
 
