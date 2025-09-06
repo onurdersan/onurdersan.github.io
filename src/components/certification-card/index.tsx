@@ -6,12 +6,10 @@ const ListItem = ({
   year,
   name,
   body,
-  link,
 }: {
   year?: React.ReactNode;
   name?: React.ReactNode;
   body?: React.ReactNode;
-  link?: string;
 }) => (
   <li className="mb-5 ml-4">
     <div
