@@ -1,5 +1,3 @@
-// gitprofile.config.ts
-
 const CONFIG = {
   github: {
     username: 'onurdersan',
@@ -15,7 +13,7 @@ const CONFIG = {
     github: {
       display: false, // Display GitHub projects?
       header: 'Github Projects',
-      mode: 'automatic', // Mode can be: 'automatic' or 'manual'
+      mode: 'automatic', 
       automatic: {
         sortBy: 'stars', // Sort projects by 'stars' or 'updated'
         limit: 8, // How many projects to display.
@@ -26,7 +24,7 @@ const CONFIG = {
       },
       manual: {
         // Properties for manually specifying projects
-        projects: ['arifszn/gitprofile', 'arifszn/pandora'], // List of repository names to display. example: ['arifszn/my-project1', 'arifszn/my-project2']
+        projects: [], // List of repository names to display. example: ['arifszn/my-project1', 'arifszn/my-project2']
       },
     },
     external: {
@@ -88,13 +86,7 @@ const CONFIG = {
     'Git',
   ],
     educations: [
-       {
-      institution: 'İstanbul University',
-      degree: 'Child Development',
-      from: '2021',
-      to: 'on going',
-    },   
-      
+     
       {
       institution: "University of Health Sciences Dr. Behçet Uz Children's Hospital",
       degree: 'Pediatric Residency',
@@ -187,27 +179,7 @@ const CONFIG = {
     },
 
     
-    {
-    name: 'BTK Academy',
-    body: `a. Project Management Fundamentals
-          b. Project and Risk Management
-          c. Algorithm Design
-          d. Entrepreneurship Fundamentals
-          e. Data Science
-          f. Artificial Intelligence
-          g. Information Technology
-          h. Deep Learning
-          i. Natural Language Processing
-          j. Reinforcement Learning`,
-    year: '',
-    },
-        {
-    name: 'T3 Academy, Turkish Technology Team',
-    body: `a. Artificial Intelligence (ongoing)
-          b. Entrepreneur Training Program (ongoing)
-          c. Project Development Training (ongoing)`,
-    year: '',
-    },
+   
   ],
 
   publications: [
@@ -233,8 +205,7 @@ const CONFIG = {
         Conclusion: The results of this study indicate that micronutrient deficiencies are highly prevalent in PPC patients. These findings have the potential to contribute to improvements in the nutritional and therapeutic management of patients.`,
     },
   ],
-  // Display articles from your medium or dev account. (Optional)
-
+  
   websites: [
     {
   name: '',
@@ -247,13 +218,13 @@ const CONFIG = {
       name: '',
       link: '',
       description: '',
-      imageUrl: '', // İsteğe bağlı
+      imageUrl: '', 
     },
     {
       name: '',
       link: '',
       description: '',
-      imageUrl: '', // İsteğe bağlı
+      imageUrl: '', 
     },
   ],
 
@@ -278,7 +249,6 @@ const CONFIG = {
     // using user system preferences, instead of the hardcoded defaultTheme
     respectPrefersColorScheme: false,
 
-    // Display the ring in Profile picture
     displayAvatarRing: true,
 
     // Available themes. To remove any theme, exclude from here.
@@ -321,7 +291,6 @@ const CONFIG = {
       'procyon',
     ],
   },
-    // Optional Footer. Supports plain text or HTML.
   footer: `Made with <a 
       class="text-primary" href="https://github.com/arifszn/gitprofile"
       target="_blank"
