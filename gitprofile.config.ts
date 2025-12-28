@@ -35,7 +35,7 @@ const CONFIG = {
       title: 'Büyüme Persentil Hesaplayıcı',
       description: '',
       imageUrl: 'icons8-personal-growth-50.png',
-      link: 'https://neyzi.netlify.app/',
+      link: 'https://onurdersan.github.io/neyzi',
       technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
     },
         {
