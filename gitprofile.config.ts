@@ -44,6 +44,13 @@ const CONFIG = {
           imageUrl: 'icons8-vitamin-64.png',
           link: 'https://onurdersan.github.io/micronutrients/',
         },
+{      
+      title: 'Pediatric CCC v3 — Classification Web App',
+      description: '',
+      imageUrl: 'https://icons8.com/icon/eFMsJu02nYEn/complex',
+      link: 'https://onurdersan.github.io/Pediatric-CCC',
+    },
+        
       ],
     },
   },
