@@ -48,7 +48,7 @@ const CONFIG = {
       title: 'Pediatric CCC v3 — Classification Web App',
       description: '',
       imageUrl: 'https://icons8.com/icon/eFMsJu02nYEn/complex',
-      link: 'https://onurdersan.github.io/Pediatric-CCC',
+      link: 'https://onurdersan.github.io/pediatric-ccc',
     },
         
       ],
