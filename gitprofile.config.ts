@@ -35,7 +35,7 @@ const CONFIG = {
       title: 'Büyüme Persentil Hesaplayıcı',
       description: '',
       imageUrl: 'icons8-personal-growth-50.png',
-      link: 'https://onurdersan.github.io/neyzi',
+      link: 'https://onurdersan.github.io/pediatri',
       technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
     },
         {
