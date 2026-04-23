@@ -32,10 +32,10 @@ const CONFIG = {
       // To hide the `External Projects` section, keep it empty.
       projects: [
         {      
-      title: 'Büyüme Persentil Hesaplayıcı',
+      title: 'Dijital Pediatri',
       description: '',
-      imageUrl: 'icons8-personal-growth-50.png',
-      link: 'https://onurdersan.github.io/pediatri',
+      imageUrl: 'https://dijitalpediatri.com/logo-isim1024x1024.svg',
+      link: 'diitalpediatri.com',
       technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS']
     },
         {
