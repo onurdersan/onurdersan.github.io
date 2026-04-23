@@ -75,7 +75,7 @@ const CONFIG = {
     telegram: '',
     website: 'https://dersanonur.bio.link',
     phone: '',
-    email: 'drdersanonur@gmail.com',
+    email: 'info@dijitalpediatri.com',
   },
   resume: {
     fileUrl:
